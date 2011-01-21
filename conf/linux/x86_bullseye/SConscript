@@ -1,0 +1,64 @@
+# Copyright 2010 - 2011, Qualcomm Innovation Center, Inc.
+# 
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+# 
+#        http://www.apache.org/licenses/LICENSE-2.0
+# 
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+# 
+
+import os
+Import('env')
+from subprocess import call
+    
+# Import common linux setttings
+env.SConscript(['../SConscript'])
+
+# Linux specific flags
+env.Append(CPPDEFINES=['QCC_CPU_X86'])
+
+# Don't care about Bullseye if we are cleaning
+if not env.GetOption('clean'):
+
+  bullseye_bin = ''
+
+  # Verify that BULLSEYE_PATH is defined in the users env var
+  if os.environ.has_key('BULLSEYE_PATH'):
+    bullseye_bin = os.environ['BULLSEYE_PATH']
+
+    # Sanity test BULLSEYE_PATH and update scons exec env
+    if ( ( os.path.isdir(bullseye_bin) ) and
+      ( os.path.isfile(bullseye_bin + "/cov01") ) ):
+      env.PrependENVPath('PATH', bullseye_bin)
+    else:
+      print "BULLSEYE_PATH is defined but the Bullseye tool"
+      print "does not appear to be installed at that location"
+      Exit()
+
+  # Bail if BULLSEYE_PATH not defined in users env var
+  else:
+    print "Bullseye code coverage tool must be installed and"
+    print "the env var BULLSEYE_PATH must be defined and must point"
+    print "to the bullseye code coverage tool bin directory"
+    Exit()
+
+  # Set Bullseye coverage file, if it's been defined (i.e. COVFILE).  
+  # If not, it will default to the current directory ('test.cov')
+  if os.environ.has_key('COVFILE'):
+    env.PrependENVPath('COVFILE', os.environ['COVFILE'])
+  else:
+    print "NOTE:"
+    print "COVFILE is not defined in your environment, so the"
+    print "bullseye code coverage file will be stored at:"
+    print os.getcwd() + "/test.cov"
+    print ''
+
+  # Enable Bullseye (i.e. 'cov01 -1')
+  call([(bullseye_bin + '/cov01'), '-1'])
+

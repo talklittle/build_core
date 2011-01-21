@@ -1,0 +1,154 @@
+# Copyright 2010 - 2011, Qualcomm Innovation Center, Inc.
+# 
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+# 
+#        http://www.apache.org/licenses/LICENSE-2.0
+# 
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+# 
+
+import os
+Import('env')
+
+# Add project dependiences
+env.SConscript(['../../../../stlport/SConscript'])
+
+# android_donut specific vars
+vars = Variables()
+vars.Add(PathVariable('ANDROID_BASE', ' Base directory of Android source tree', os.environ.get('ANDROID_BASE')))
+vars.Update(env)
+Help(vars.GenerateHelpText(env))
+
+# Verify dependencies
+if '' == env.subst('$ANDROID_BASE'):
+   print 'ANDROID_BASE variable is required'
+   Exit()
+
+# Android specific compiler flags
+ANDROID_CONFIG_H = File(env.subst('$ANDROID_BASE/system/core/include/arch/linux-arm/AndroidConfig.h')).get_abspath()
+env.Append(CPPDEFINES = ['QCC_OS_ANDROID',
+                         'QCC_CPU_ARM',
+                         'ANDROID'])
+env.Append(CPPFLAGS=['-Wno-unused',
+                     '-Werror=return-type',
+                     '-fno-builtin',
+                     '-fno-exceptions',
+                     '-ffunction-sections',
+                     '-fdata-sections',
+                     '-finline-functions',
+                     '-march=armv6',
+                     '-mthumb-interwork',
+                     '-include',
+                     ANDROID_CONFIG_H])
+
+env.Append(CFLAGS=['-Wall', '-pipe', '-Wno-long-long'])
+env.Append(CXXFLAGS=['-Wall', '-pipe', '-fno-rtti', '-Wno-long-long'])
+
+
+# Use Android provided tools
+env['ANDROID_TOOLS'] = '$ANDROID_BASE/prebuilt/linux-x86/toolchain/arm-eabi-4.2.1/bin'
+
+env['CC'] = '$ANDROID_TOOLS/arm-eabi-gcc'
+env['CXX'] = '$ANDROID_TOOLS/arm-eabi-g++'
+env['LINK'] = '$ANDROID_TOOLS/arm-eabi-gcc'
+env['AR'] = '$ANDROID_TOOLS/arm-eabi-ar'
+
+env['ANDROID_TARGET'] = 'generic'
+
+# Android include paths
+env.Append(CPPPATH=['$ANDROID_BASE/system/core/include',
+                    '$ANDROID_BASE/hardware/libhardware/include',
+                    '$ANDROID_BASE/hardware/libhardware_legacy/include',
+                    '$ANDROID_BASE/hardware/ril/include',
+                    '$ANDROID_BASE/dalvik/libnativehelper/include',
+                    '$ANDROID_BASE/frameworks/base/include',
+                    '$ANDROID_BASE/frameworks/base/opengl/include',
+                    '$ANDROID_BASE/external/skia/include',
+                    '$ANDROID_BASE/external/bluez/libs/include',
+                    '$ANDROID_BASE/external/bluetooth/bluez/include',
+                    '$ANDROID_BASE/out/target/product/$ANDROID_TARGET/obj/include',
+                    '$ANDROID_BASE/bionic/libc/arch-arm/include',
+                    '$ANDROID_BASE/bionic/libc/include',
+                    '$ANDROID_BASE/bionic/libstdc++/include',
+                    '$ANDROID_BASE/bionic/libc/kernel/common',
+                    '$ANDROID_BASE/bionic/libc/kernel/common/linux',
+                    '$ANDROID_BASE/bionic/libc/kernel/arch-arm',
+                    '$ANDROID_BASE/bionic/libm/include',
+                    '$ANDROID_BASE/bionic/libm/include/arch/arm',
+                    '$ANDROID_BASE/bionic/libthread_db/include',
+                    '$ANDROID_BASE/bionic/libc/stdlib',
+                    '$ANDROID_BASE/bionic/libc/string',
+                    '$ANDROID_BASE/bionic/libc/stdio',
+                    '$ANDROID_BASE/bionic/libc',
+                    '$ANDROID_BASE/out/target/product/$ANDROID_TARGET/obj/STATIC_LIBRARIES/libc_common_intermediates',
+                    '$ANDROID_BASE/system/core/include/arch/linux-arm',
+                    '$ANDROID_BASE/bionic/libc/private',
+                    '$ANDROID_BASE/external/openssl/include'])
+
+
+# Android library locations
+env['ANDROID_LIBDIR'] = '$ANDROID_BASE/out/target/product/$ANDROID_TARGET/obj'
+
+env.Append(LIBPATH=['$ANDROID_LIBDIR/lib'])
+env.Append(LIBPATH=['$ANDROID_BASE/out/target/product/$ANDROID_TARGET/obj/lib'])
+
+# Android link flags
+env.Append(LINKFLAGS=' -nostdlib -Bdynamic -Wl,--no-undefined -Wl,-T,$ANDROID_BASE/build/core/armelf.x \
+	-Wl,-dynamic-linker,/system/bin/linker -Wl,--gc-sections -Wl,-z,nocopyreloc \
+	-Wl,-rpath-link=$ANDROID_LIBDIR/lib $ANDROID_LIBDIR/lib/crtbegin_dynamic.o')
+
+# Android linking requires a postfix set of objects
+env.Append(LINKCOM=' $LINKFLAGS_POST')
+env['LINKFLAGS_POST'] = ' $ANDROID_BASE/prebuilt/linux-x86/toolchain/arm-eabi-4.2.1/lib/gcc/arm-eabi/4.2.1/interwork/libgcc.a $ANDROID_LIBDIR/lib/crtend_android.o'
+
+# Debug/Release variants
+if env['VARIANT'] == 'debug':
+   env.Append(CFLAGS='-g')
+   env.Append(CXXFLAGS='-g')
+   env.Append(JAVACFLAGS='-g -Xlint -Xlint:-serial')
+else:
+   env.Append(CFLAGS='-O3')
+   env.Append(CXXFLAGS='-O3')
+   env.Append(LINKFLAGS='-s')
+   env.Append(JAVACFLAGS='-Xlint -Xlint:-serial')
+
+# Archive expander
+def archive_expand_emitter(target, source, env):
+   # target starts out as phony file in the desired output directory
+   # target ends up being the list of archive objs
+   outdir = env.subst(os.path.dirname(str(target[0])))
+   outTargs = []
+   for archive in source:
+      fo = os.popen(env.subst('$AR t ' + str(archive)))
+      for ln in fo.readlines():
+         outTargs.append(File(outdir + os.path.sep + ln[:-1]))
+   return outTargs, source
+      
+
+def archive_expand(target, source, env):
+   # target is a list of objects (unused here except to determine output dir)
+   # source list of archives to (potentially) expand
+   outdir = env.subst(os.path.dirname(str(target[0])))
+   doExpand = False
+   for t in target:
+      if not os.path.exists(str(t)):
+         doExpand = True
+         break
+   if not doExpand:
+      for a in source:
+         if os.path.getctime(str(target[0])) < os.path.getctime(str(a)):
+            doExpand = True
+            break
+   if doExpand == True:
+      for a in source:
+         Execute(env.subst('cd ' + outdir + ' && $AR x ' + str(a)))
+   return None
+
+expand_bld = Builder(action=archive_expand, emitter=archive_expand_emitter)
+env.Append(BUILDERS={'ArchiveExpand' : expand_bld})
