@@ -152,17 +152,17 @@ echo "Using uncrustify config file:  $unc_cfg"
 
 # Test for installation of uncrustify
 uncv=`uncrustify -v`
-unc_regex='^uncrustify ([0-9].[0-9]{2})$'
-valid_version=0
+unc_regex='^uncrustify ([0-9].[0-9]{2})'
+valid_version="False"
 
 if [[ "$uncv" =~ $unc_regex ]]; then 
 
     # Extract the uncrustify version and compare with minimum requirement
     version=${BASH_REMATCH[1]}
-    valid_version=`echo "if ($version >= $version_min) print 1 else print 0" | bc -l`
+    valid_version=`python -c "print $version >= $version_min"`
 
     # If 0 then uncrustify is installed but does not meet version requirement, so we bail
-    if [ $valid_version == 0 ]; then 
+    if [ $valid_version == "False" ]; then 
         echo You are using uncrustify v$version.  You must be using uncrustify v$version_min or later.
         exit 1;
     fi
