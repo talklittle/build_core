@@ -181,7 +181,8 @@ files=`find '.' -type d -name "stlport" -prune -o \
                 \( -name "*.[cChH]" -o -name "*.cc" -o -name "*.cpp" \) \
                 -not -name "*~" \
                 -not -name ".#*" \
-                -not -name "alljoyn_java.h"`
+                -not -name "alljoyn_java.h" \
+                -not -name "Status.h"`
 
 # Loop through the files and apply uncrustify
 for srcfile in $files
