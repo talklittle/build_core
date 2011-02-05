@@ -174,12 +174,14 @@ else
 fi
 
 # Recurse from the current dir and get a list of source files, skipping certain directories
-files=`find . -type d -name "stlport" -prune -o \
-              -type d -name "build" -prune -o \
-              -type d -name ".repo" -prune -o \
-              -type d -name ".git" -prune -o \
-              \( -name "*.[cChH]" -o -name "*.cc" -o -name "*.cpp" \) \
-              -not -name "*~" -not -name ".#*"`
+files=`find '.' -type d -name "stlport" -prune -o \
+                -type d -name "build" -prune -o \
+                -type d -name ".repo" -prune -o \
+                -type d -name ".git" -prune -o \
+                \( -name "*.[cChH]" -o -name "*.cc" -o -name "*.cpp" \) \
+                -not -name "*~" \
+                -not -name ".#*" \
+                -not -name "alljoyn_java.h"`
 
 # Loop through the files and apply uncrustify
 for srcfile in $files
