@@ -232,11 +232,11 @@ def parseStatusBlock(blockNode):
         elif node.localName == 'status':
             if isFirst:
                 if None != headerOut:
-                    headerOut.write("\n    %s = %s /**< %s */" % (node.getAttribute('name'), hex(offset), node.getAttribute('comment')))
+                    headerOut.write("\n    %s = %s /**< %s */" % (node.getAttribute('name'), node.getAttribute('value'), node.getAttribute('comment')))
                 isFirst = False
             else:
                 if None != headerOut:
-                    headerOut.write(",\n    %s = %s /**< %s */" % (node.getAttribute('name'), hex(offset), node.getAttribute('comment')))
+                    headerOut.write(",\n    %s = %s /**< %s */" % (node.getAttribute('name'), node.getAttribute('value'), node.getAttribute('comment')))
             if None != codeOut:
                 codeOut.write("        CASE(%s);\n" % (node.getAttribute('name')))
             offset += 1

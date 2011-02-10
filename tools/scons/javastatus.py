@@ -190,12 +190,12 @@ def parseStatusBlock(blockNode):
             if isFirst:
                 if None != codeOut:
                     codeOut.write("\n    /** %s. */" % node.getAttribute('comment'))
-                    codeOut.write("\n    %s(%s)" % (node.getAttribute('name')[3:], hex(offset)))
+                    codeOut.write("\n    %s(%s)" % (node.getAttribute('name')[3:], node.getAttribute('value')))
                 isFirst = False
             else:
                 if None != codeOut:
                     codeOut.write(",\n    /** %s. */" % node.getAttribute('comment'))
-                    codeOut.write("\n    %s(%s)" % (node.getAttribute('name')[3:], hex(offset)))
+                    codeOut.write("\n    %s(%s)" % (node.getAttribute('name')[3:], node.getAttribute('value')))
             offset += 1
         elif node.localName == 'include' and node.namespaceURI == 'http://www.w3.org/2001/XInclude':
             parseInclude(node)
