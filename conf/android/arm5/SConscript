@@ -90,13 +90,12 @@ else:
 
 # Use Android provided tools
 if ndkVersion >= 5:
-   env.Append(CPPPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/include',
-                       '$ANDROID_NDK/sources/cxx-stl/system/include',
-                       '$ANDROID_SRC/external/bluetooth/bluez/include',
-                       '$ANDROID_SRC/external/openssl/include'])
+   env['ANDROID_TOOLS'] = '$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin'
+   env['CC'] = '$ANDROID_TOOLS/arm-linux-androideabi-gcc'
+   env['CXX'] = '$ANDROID_TOOLS/arm-linux-androideabi-g++'
+   env['LINK'] = '$ANDROID_TOOLS/arm-linux-androideabi-gcc'
 else:
     env['ANDROID_TOOLS'] = '$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/bin'
-
     env['CC'] = '$ANDROID_TOOLS/arm-eabi-gcc'
     env['CXX'] = '$ANDROID_TOOLS/arm-eabi-g++'
     env['LINK'] = '$ANDROID_TOOLS/arm-eabi-gcc'
