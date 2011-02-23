@@ -20,7 +20,8 @@ Import('env')
 vars = Variables()
 vars.Add(PathVariable('ANDROID_SRC', ' Base directory of Android source tree', os.environ.get('ANDROID_SRC')))
 vars.Add(PathVariable('ANDROID_NDK', ' Base directory of Android NDK', os.environ.get('ANDROID_NDK')))
-vars.Add(PathVariable('ANDROID_API_LEVEL', ' Android API level (5 through 8)', os.environ.get('ANDROID_API_LEVEL')))
+vars.Add(EnumVariable('ANDROID_API_LEVEL', ' Android API level (5 through 8)', 
+                      os.environ.get('ANDROID_API_LEVEL'), allowed_values=('5', '8', ''),  map={}, ignorecase=0))
 vars.Update(env)
 Help(vars.GenerateHelpText(env))
 
