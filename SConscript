@@ -24,6 +24,7 @@ vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86-64
 vars.Add(EnumVariable('VARIANT', 'Build variant', 'debug', allowed_values=('debug', 'release')))
 vars.Add(EnumVariable('DOCS', 'Output doc type', 'none', allowed_values=('none', 'pdf', 'html')))
 vars.Add(EnumVariable('MSVC_VERSION', 'MSVC compiler version - Windows', '9.0', allowed_values=('8.0', '9.0', '10.0')))
+vars.Add(EnumVariable('WS', 'Whitespace Policy Checker', 'check', allowed_values=('check', 'detail', 'fix', 'off')))
 
 # Standard variant directories
 build_dir = 'build/${OS}/${CPU}/${VARIANT}'
