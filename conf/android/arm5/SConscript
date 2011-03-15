@@ -51,8 +51,7 @@ else:
 # CHANGING THESE COULD AFFECT COMPATIBILITY WITH THE NDK. 
 
 env.Append(CPPDEFINES=['QCC_OS_ANDROID',
-                       #'QCC_CPU_ARM',
-                       'ARMV=5',
+                       'QCC_CPU_ARM',
                        'ANDROID',
                        '__ARM_ARCH_5__',
                        '__ARM_ARCH_5T__',

@@ -1,4 +1,4 @@
-# Copyright 2010 - 2011, Qualcomm Innovation Center, Inc.
+# Copyright 2011, Qualcomm Innovation Center, Inc.
 # 
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -63,9 +63,10 @@ env.Append(CPPFLAGS=['-fpic',
                      '-funwind-tables',
                      '-fstack-protector',
                      '-Wno-psabi',
-                     '-march=armv7-a',
-                     '-mfloat-abi=softfp',
-                     '-mfpu=vfp',
+                     '-march=armv5te',
+                     '-mtune=xscale',
+                     '-msoft-float',
+                     '-mthumb',
                      '-Os',
                      '-fomit-frame-pointer',
                      '-Wno-unused',
@@ -88,7 +89,6 @@ else:
                         '-fno-strict-aliasing',
                         '-finline-limit=64'])
 
-
 # Use Android provided tools
 if ndkVersion >= 5:
    env['ANDROID_TOOLS'] = '$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin'
@@ -96,11 +96,10 @@ if ndkVersion >= 5:
    env['CXX'] = '$ANDROID_TOOLS/arm-linux-androideabi-g++'
    env['LINK'] = '$ANDROID_TOOLS/arm-linux-androideabi-gcc'
 else:
-   env['ANDROID_TOOLS'] = '$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/bin'
-   env['CC'] = '$ANDROID_TOOLS/arm-eabi-gcc'
-   env['CXX'] = '$ANDROID_TOOLS/arm-eabi-g++'
-   env['LINK'] = '$ANDROID_TOOLS/arm-eabi-gcc'
-
+    env['ANDROID_TOOLS'] = '$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/bin'
+    env['CC'] = '$ANDROID_TOOLS/arm-eabi-gcc'
+    env['CXX'] = '$ANDROID_TOOLS/arm-eabi-g++'
+    env['LINK'] = '$ANDROID_TOOLS/arm-eabi-gcc'
 
 env['ANDROID_TARGET'] = 'generic'
 
@@ -111,19 +110,23 @@ if ndkVersion >= 5:
                        '$ANDROID_SRC/external/bluetooth/bluez/include',
                        '$ANDROID_SRC/external/openssl/include'])
 else:
-   env.Append(CPPPATH=['$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/include',
-                       '$ANDROID_SRC/external/bluetooth/bluez/include',
-                       '$ANDROID_SRC/external/openssl/include'])
+    env.Append(CPPPATH=['$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/include',
+                        '$ANDROID_SRC/external/bluetooth/bluez/include',
+                        '$ANDROID_SRC/external/openssl/include'])
 
 # Android library locations
 if ndkVersion >= 5:
    env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+   #append the location of the gcc library
+   env.Append(LIBPATH=['$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/'])
 else:
-   env.Append(LIBPATH=['$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
-
+    env.Append(LIBPATH=['$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+    
 env.Append(LIBPATH=['$ANDROID_SRC/out/target/product/$ANDROID_TARGET/system/lib'])
 
-# Android link flags
+
+
+# Android link flags\
 if ndkVersion >= 5:
    env.Append(LINKFLAGS=['-Wl,--gc-sections',
                          '-Wl,-z,nocopyreloc',
@@ -146,32 +149,34 @@ if ndkVersion >= 5:
                                   '-Wl,-rpath-link=$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
                                   '-s'])
 else:
-   env.Append(LINKFLAGS=['-nostdlib',
-                         '-Bdynamic',
-                         '-Wl,--no-undefined',
-                         '-Wl,-T,$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/arm-eabi/lib/ldscripts/armelf.x',
-                         '-Wl,-dynamic-linker,/system/bin/linker',
-                         '-Wl,--gc-sections',
-                         '-Wl,-z,nocopyreloc',
-                         '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
-                         '$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/crtbegin_dynamic.o'])
+    env.Append(LINKFLAGS=['-nostdlib',
+                          '-Bdynamic',
+                          '-Wl,--no-undefined',
+                          '-Wl,-T,$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/arm-eabi/lib/ldscripts/armelf.x',
+                          '-Wl,-dynamic-linker,/system/bin/linker',
+                          '-Wl,--gc-sections',
+                          '-Wl,-z,nocopyreloc',
+                          '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
+                          '$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/crtbegin_dynamic.o'])
 
-   # Android linking requires a postfix set of objects
-   env.Append(LINKCOM=' $LINKFLAGS_POST')
-   env.Append(LINKFLAGS_POST=['$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/libgcc.a',
-                              '$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/crtend_android.o'])
+    # Android linking requires a postfix set of objects
+    env.Append(LINKCOM=' $LINKFLAGS_POST')
+    env.Append(LINKFLAGS_POST=['$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/libgcc.a',
+                               '$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/crtend_android.o'])
 
-   # SCons default SHLINKFLAGS is '$LINKFLAGS -shared'.  Since we don't
-   # want to pull in $LINKFLAGS, reset it here instead of Append().
-   env['SHLINKFLAGS'] = ' '.join(['-nostdlib',
-                                  '-Wl,-soname,${TARGET.file} '
-                                  '-Wl,-shared,-Bsymbolic',
-                                  '$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/libgcc.a',
-                                  '-Wl,--fix-cortex-a8',
-                                  '-Wl,--no-undefined',
-                                  '-Wl,-z,noexecstack',
-                                  '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
-                                  '-s'])
+    # SCons default SHLINKFLAGS is '$LINKFLAGS -shared'.  Since we don't
+    # want to pull in $LINKFLAGS, reset it here instead of Append().
+    env['SHLINKFLAGS'] = ' '.join(['-nostdlib',
+                                   '-march=armv5te',
+                                   '-mtune=xscale',
+                                   '-Wl,-soname,${TARGET.file}',
+                                   '-Wl,-shared,-Bsymbolic',
+                                   '-Wl,--fix-cortex-a8',
+                                   '-Wl,--no-undefined',
+                                   '-Wl,-z,noexecstack',
+                                   '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
+                                   '-s'
+                                   ])
 
 # Debug/Release variants
 if env['VARIANT'] == 'debug':
