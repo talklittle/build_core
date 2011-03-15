@@ -18,7 +18,6 @@ import os
 vars = Variables()
 
 # Common build variables
-vars = Variables()
 vars.Add(EnumVariable('OS', 'Target OS', 'linux', allowed_values=('linux', 'windows', 'android', 'android_donut', 'maemo')))
 vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86-64', 'IA64', 'arm', 'x86_bullseye')))
 vars.Add(EnumVariable('VARIANT', 'Build variant', 'debug', allowed_values=('debug', 'release')))
@@ -52,6 +51,8 @@ elif env['OS'] == 'windows' and env['CPU'] == 'IA64':
 elif env['OS'] == 'windows':
     print 'Windows CPU must be x86 or IA64'
     Exit()
+elif env['OS'] == 'android':
+    env = Environment(variables = vars, tools = {'gnulink', 'gcc', 'g++', 'ar', 'as' }, ENV={'PATH': path})
 else:
     env = Environment(variables = vars, ENV={'PATH': path})
 
