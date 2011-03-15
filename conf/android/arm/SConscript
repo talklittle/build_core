@@ -20,8 +20,8 @@ Import('env')
 vars = Variables()
 vars.Add(PathVariable('ANDROID_SRC', ' Base directory of Android source tree', os.environ.get('ANDROID_SRC')))
 vars.Add(PathVariable('ANDROID_NDK', ' Base directory of Android NDK', os.environ.get('ANDROID_NDK')))
-vars.Add(EnumVariable('ANDROID_API_LEVEL', ' Android API level (5 through 8)', 
-                      os.environ.get('ANDROID_API_LEVEL'), allowed_values=('5', '8', ''),  map={}, ignorecase=0))
+vars.Add(EnumVariable('ANDROID_API_LEVEL', ' Android API level (5 through 9)', 
+                      os.environ.get('ANDROID_API_LEVEL'), allowed_values=('5', '8', '9', ''),  map={}, ignorecase=0))
 vars.Update(env)
 Help(vars.GenerateHelpText(env))
 
@@ -35,10 +35,28 @@ if '' == env.subst('$ANDROID_SRC'):
    Exit()
 
 if '' == env.subst('$ANDROID_API_LEVEL'):
-   env['ANDROID_API_LEVEL'] = '5'
+   env['ANDROID_API_LEVEL'] = '8'
+
+# Override MSVC build settings when building on windows.
+if 'win32' == env.subst('$HOST_OS'):
+   env['OBJPREFIX']      = ''
+   env['OBJSUFFIX']      = '.o'
+   env['SHOBJPREFIX']    = '$OBJPREFIX'
+   env['SHOBJSUFFIX']    = '$OBJSUFFIX'
+   env['PROGPREFIX']     = ''
+   env['PROGSUFFIX']     = ''
+   env['LIBPREFIX']      = 'lib'
+   env['LIBSUFFIX']      = '.a'
+   env['SHLIBPREFIX']    = '$LIBPREFIX'
+   env['SHLIBSUFFIX']    = '.so'
+   env['LIBPREFIXES']    = [ '$LIBPREFIX' ]
+   env['LIBSUFFIXES']    = [ '$LIBSUFFIX', '$SHLIBSUFFIX' ]
+   env['PREBUILT_HOST_OS'] = 'windows'
+else:
+   env['PREBUILT_HOST_OS'] = 'linux-x86'
 
 # Determine Android NDK version
-if os.path.exists(env.subst('$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/bin')):
+if os.path.exists(env.subst('$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/bin')):
    ndkVersion = 4
 elif os.path.exists(env.subst('$ANDROID_NDK/toolchains')):
    ndkVersion = 5
@@ -91,12 +109,12 @@ else:
 
 # Use Android provided tools
 if ndkVersion >= 5:
-   env['ANDROID_TOOLS'] = '$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin'
+   env['ANDROID_TOOLS'] = '$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$PREBUILT_HOST_OS/bin'
    env['CC'] = '$ANDROID_TOOLS/arm-linux-androideabi-gcc'
    env['CXX'] = '$ANDROID_TOOLS/arm-linux-androideabi-g++'
    env['LINK'] = '$ANDROID_TOOLS/arm-linux-androideabi-gcc'
 else:
-    env['ANDROID_TOOLS'] = '$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/bin'
+    env['ANDROID_TOOLS'] = '$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/bin'
     env['CC'] = '$ANDROID_TOOLS/arm-eabi-gcc'
     env['CXX'] = '$ANDROID_TOOLS/arm-eabi-g++'
     env['LINK'] = '$ANDROID_TOOLS/arm-eabi-gcc'
@@ -118,7 +136,7 @@ else:
 if ndkVersion >= 5:
    env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
    #append the location of the gcc library
-   env.Append(LIBPATH=['$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/'])
+   env.Append(LIBPATH=['$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/'])
 else:
     env.Append(LIBPATH=['$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
     
@@ -152,7 +170,7 @@ else:
     env.Append(LINKFLAGS=['-nostdlib',
                           '-Bdynamic',
                           '-Wl,--no-undefined',
-                          '-Wl,-T,$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/arm-eabi/lib/ldscripts/armelf.x',
+                          '-Wl,-T,$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/arm-eabi/lib/ldscripts/armelf.x',
                           '-Wl,-dynamic-linker,/system/bin/linker',
                           '-Wl,--gc-sections',
                           '-Wl,-z,nocopyreloc',
@@ -161,7 +179,7 @@ else:
 
     # Android linking requires a postfix set of objects
     env.Append(LINKCOM=' $LINKFLAGS_POST')
-    env.Append(LINKFLAGS_POST=['$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/libgcc.a',
+    env.Append(LINKFLAGS_POST=['$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/libgcc.a',
                                '$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/crtend_android.o'])
 
     # SCons default SHLINKFLAGS is '$LINKFLAGS -shared'.  Since we don't
