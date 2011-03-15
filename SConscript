@@ -52,7 +52,7 @@ elif env['OS'] == 'windows':
     print 'Windows CPU must be x86 or IA64'
     Exit()
 elif env['OS'] == 'android':
-    env = Environment(variables = vars, tools = {'gnulink', 'gcc', 'g++', 'ar', 'as' }, ENV={'PATH': path})
+    env = Environment(variables = vars, tools = ['gnulink', 'gcc', 'g++', 'ar', 'as'], ENV={'PATH': path})
 else:
     env = Environment(variables = vars, ENV={'PATH': path})
 
