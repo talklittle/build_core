@@ -138,9 +138,11 @@ else:
 if ndkVersion >= 5:
    env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
    #append the location of the gcc library
-   env.Append(LIBPATH=['$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/'])
+   env.Append(LIBPATH=['$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$PREBUILT_HOST_OS/lib/gcc/arm-linux-androideabi/4.4.3/'])
 else:
     env.Append(LIBPATH=['$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+    #append the location of the gcc library
+    env.Append(LIBPATH=['$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/'])
     
 env.Append(LIBPATH=['$ANDROID_SRC/out/target/product/$ANDROID_TARGET/system/lib'])
 
@@ -181,7 +183,7 @@ else:
 
     # Android linking requires a postfix set of objects
     env.Append(LINKCOM=' $LINKFLAGS_POST')
-    env.Append(LINKFLAGS_POST=['$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/libgcc.a',
+    env.Append(LINKFLAGS_POST=[#'$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/libgcc.a',
                                '$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/crtend_android.o'])
 
     # SCons default SHLINKFLAGS is '$LINKFLAGS -shared'.  Since we don't
