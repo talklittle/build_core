@@ -110,11 +110,13 @@ else:
 # Use Android provided tools
 if ndkVersion >= 5:
    env['ANDROID_TOOLS'] = '$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$PREBUILT_HOST_OS/bin'
+   env['AR'] = '$ANDROID_TOOLS/arm-linux-androideabi-ar'
    env['CC'] = '$ANDROID_TOOLS/arm-linux-androideabi-gcc'
    env['CXX'] = '$ANDROID_TOOLS/arm-linux-androideabi-g++'
    env['LINK'] = '$ANDROID_TOOLS/arm-linux-androideabi-gcc'
 else:
     env['ANDROID_TOOLS'] = '$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/bin'
+    env['AR'] = '$ANDROID_TOOLS/arm-eabi-ar'
     env['CC'] = '$ANDROID_TOOLS/arm-eabi-gcc'
     env['CXX'] = '$ANDROID_TOOLS/arm-eabi-g++'
     env['LINK'] = '$ANDROID_TOOLS/arm-eabi-gcc'
