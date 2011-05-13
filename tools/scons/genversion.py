@@ -15,6 +15,7 @@
 
 import getpass
 import platform
+import os
 import re
 from subprocess import *
 
@@ -101,7 +102,10 @@ def ParseSource(source):
 def GenVersionAction(source, target, env):
     import time
     product, architecture, api_level, release, lines = ParseSource(str(source[0]))
+    curdir = os.getcwd()
+    os.chdir(os.path.dirname(str(source[0])))
     bld_info = GetBuildInfo(env)
+    os.chdir(curdir)
     date = time.strftime('%a %b %d %H:%M:%S UTC %Y', time.gmtime())
     version_str = 'v%(arch)d.%(api)d.%(rel)d' % ({ 'arch': architecture,
                                                    'api': api_level,
