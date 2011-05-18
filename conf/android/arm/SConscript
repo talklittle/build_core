@@ -98,7 +98,7 @@ env.Append(CPPFLAGS=['-Wall', '-pipe'])
 
 # NDK version specific flags
 if ndkVersion >= 5:
-   env.Append(CPPFLAGS=['-fstrict-aliasing',
+   env.Append(CPPFLAGS=['-fno-strict-aliasing',
                         '-funswitch-loops',
                         '-finline-limit=300'])
 else:
