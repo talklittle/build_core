@@ -18,7 +18,7 @@
 import sys, os, fnmatch, argparse, re, filecmp, difflib, textwrap
 from subprocess import Popen, STDOUT, PIPE
 
-def main( ):
+def main(wscmd=None,*args):
     dir_ignore = ["stlport", "build", ".git", ".repo"]
     file_ignore_patterns = ['\.#.*', 'alljoyn_java\.h', 'Status\.h']
     file_patterns = ['*.c', '*.h', '*.cpp', '*.cc']
@@ -26,9 +26,28 @@ def main( ):
     uncrustify_config = None
     version_min = 0.57
     unc_suffix = ".uncrustify"
+    ns = None
+    wscfg = None
     
     parser = get_parser()
-    ns = parser.parse_args()
+    
+    if wscmd is None:
+        if len(sys.argv) > 1:
+            wscmd = sys.argv[1]
+        else:
+            wscmd = valid_commands[0]
+        
+        if len(sys.argv) > 2:
+            wscfg = os.path.normpath(sys.argv[2])
+    else:
+        if args:
+            wscfg = os.path.normpath(args[0])
+    
+    if wscfg:
+       ns = parser.parse_args([wscmd,wscfg])
+    else:
+       ns = parser.parse_args([wscmd]) 
+    
     if ns.wscmd not in valid_commands:
         print "\'" + ns.wscmd + "\'" + " is not a valid command"
         parser.print_help()
@@ -36,15 +55,23 @@ def main( ):
     
     '''If config specified in CL then use that, otherwise search for it'''    
     if ns.wscfg:
-        uncrustify_config = ns.wscfg.name
+        uncrustify_config = ns.wscfg
     else:
         uncrustify_config = find_config()
-        
+    
+    '''Cannot find config file'''    
     if not uncrustify_config:
         print "Unable to find a config file"
         parser.print_help()
         sys.exit(1)
     
+    '''Specified config file is invalid'''
+    if not os.path.isfile(uncrustify_config):
+        print uncrustify_config + " does not exist or is not a file"
+        parser.print_help()
+        sys.exit(1)
+    
+    '''Verify uncrustify install and version'''
     version = uncrustify_version()    
     if version < version_min:
         print ("You are using uncrustify v" + str(version) + 
@@ -105,7 +132,12 @@ def main( ):
         
         '''remove the uncrustify output file'''            
         if os.path.exists(uncfile):
-            os.remove(uncfile)
+            try:
+                os.remove(uncfile)
+            except OSError:
+                print "Unable to remove uncrustify output file: " + uncfile
+     
+    return 0
 
 '''Return the uncrustify version number'''
 def uncrustify_version( ):
@@ -162,7 +194,7 @@ def get_parser( ):
             >python %(prog)s check
         
         Get a list of non-compliant files using your own uncrustify config:
-            >python %(prog)s check myconfig.cfg
+            >python %(prog)s check r'myconfig.cfg' (note: use raw string)
         
         Get a diff of non-compliant files using the alljoyn uncrustify config:
             >python %(prog)s detail
@@ -178,7 +210,6 @@ def get_parser( ):
                             help='options:  check(default) | detail | fix')
                             
     parser.add_argument(    'wscfg',
-                            type=file, 
                             nargs='?', 
                             metavar='uncrustify config',
                             help='specify an alternative uncrustify config (default=none)')
@@ -194,6 +225,7 @@ def find_config( ):
     foundit = 0
     DIRDEPTHMAX = 6
     curdir = None
+    start = os.path.abspath(os.curdir)
     
     '''Limit directory search to depth DIRDEPTHMAX'''
     for i in range(DIRDEPTHMAX):
@@ -206,7 +238,8 @@ def find_config( ):
     
     if foundit == 1 and os.path.exists(os.path.join(curdir, ajcfgrelpath)):
         ajcfgpath = os.path.join(curdir, ajcfgrelpath)        
-                
+    
+    os.chdir(start)            
     return ajcfgpath        
 
 '''Recurse through directories and locate files that match a given pattern'''
