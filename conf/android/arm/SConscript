@@ -163,7 +163,7 @@ if ndkVersion >= 5:
    if env['VARIANT'] == 'debug':
       stripomatic = ''
    else:
-      stipomatic = '-s'
+      stripomatic = '-s'
    
    env['SHLINKFLAGS'] = ' '.join(['-Wl,-soname,${TARGET.file} '
                                   '-shared',
