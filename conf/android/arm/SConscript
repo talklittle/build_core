@@ -159,6 +159,12 @@ if ndkVersion >= 5:
 
    # SCons default SHLINKFLAGS is '$LINKFLAGS -shared'.  Since we don't
    # want to pull in $LINKFLAGS, reset it here instead of Append().
+
+   if env['VARIANT'] == 'debug':
+      stripomatic = ''
+   else:
+      stipomatic = '-s'
+   
    env['SHLINKFLAGS'] = ' '.join(['-Wl,-soname,${TARGET.file} '
                                   '-shared',
                                   '--sysroot=$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm',
@@ -169,7 +175,7 @@ if ndkVersion >= 5:
                                   '-Wl,--no-undefined',
                                   '-Wl,-z,noexecstack',
                                   '-Wl,-rpath-link=$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
-                                  '-s'])
+                                  stripomatic])
 else:
     env.Append(LINKFLAGS=['-nostdlib',
                           '-Bdynamic',
@@ -188,6 +194,12 @@ else:
 
     # SCons default SHLINKFLAGS is '$LINKFLAGS -shared'.  Since we don't
     # want to pull in $LINKFLAGS, reset it here instead of Append().
+
+    if env['VARIANT'] == 'debug':
+        stripomatic = ''
+    else:
+        stipomatic = '-s'
+   
     env['SHLINKFLAGS'] = ' '.join(['-nostdlib',
                                    '-march=armv5te',
                                    '-mtune=xscale',
@@ -197,8 +209,7 @@ else:
                                    '-Wl,--no-undefined',
                                    '-Wl,-z,noexecstack',
                                    '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
-                                   '-s'
-                                   ])
+                                   stripomatic])
 
 # Debug/Release variants
 if env['VARIANT'] == 'debug':
