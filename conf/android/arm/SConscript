@@ -198,7 +198,7 @@ else:
     if env['VARIANT'] == 'debug':
         stripomatic = ''
     else:
-        stipomatic = '-s'
+        stripomatic = '-s'
    
     env['SHLINKFLAGS'] = ' '.join(['-nostdlib',
                                    '-march=armv5te',
