@@ -18,29 +18,34 @@
 import sys, os, fnmatch, re, filecmp, difflib, textwrap
 from subprocess import Popen, STDOUT, PIPE
 
-def main(*args):
+def main(argv=None):
     dir_ignore = ["stlport", "build", ".git", ".repo"]
     file_ignore_patterns = ['\.#.*', 'alljoyn_java\.h', 'Status\.h']
     file_patterns = ['*.c', '*.h', '*.cpp', '*.cc']
-    valid_commands = ["check", "detail", "fix"]
+    valid_commands = ["check", "detail", "fix", "off"]
     uncrustify_config = None
     version_min = 0.57
     unc_suffix = ".uncrustify"
     wscfg = None
     xit=0
 
-    if len(sys.argv) > 1:
-        wscmd = sys.argv[1]
+    if argv is None:
+        argv=[]
+    if len(argv) > 0:
+        wscmd = argv[0]
     else:
         wscmd = valid_commands[0]
 
-    if len(sys.argv) > 2:
-        wscfg = os.path.normpath(sys.argv[2])
+    if len(argv) > 1:
+        wscfg = os.path.normpath(argv[1])
 
     if wscmd not in valid_commands:
         print "\'" + wscmd + "\'" + " is not a valid command"
         print_help()
         sys.exit(2)
+
+    if wscmd == 'off':
+        return 0
 
     '''If config specified in CL then use that, otherwise search for it'''
     if wscfg:
@@ -246,6 +251,9 @@ def locate(file_patterns, file_ignore_patterns, dir_ignore_patterns, root=os.cur
                 yield os.path.join(path, filename)
 
 if __name__ == "__main__":
-    sys.exit(main())
+    if len(sys.argv) > 1:
+        sys.exit(main(sys.argv[1:]))
+    else:
+        sys.exit(main())
 
 #end
