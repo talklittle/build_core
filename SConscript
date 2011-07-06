@@ -125,4 +125,17 @@ env.Append(BUILDERS = {'Status' : statusBuilder})
 Export('env')
 env.SConscript('conf/${OS}/${CPU}/SConscript')
 
+# Whitespace policy
+if env['WS'] != 'off' and not env.GetOption('clean'):
+    import sys
+    sys.path.append('tools/bin')
+    import whitespace
+
+    def wsbuild(target, source, env):
+        print "Evaluating whitespace compliance..."
+        print "Note: enter 'scons -h' to see whitespace (WS) options"
+        return whitespace.main([env['WS'],])
+
+    env.Command('#/ws', Dir('$DISTDIR'), wsbuild)
+
 Return('env')

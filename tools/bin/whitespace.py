@@ -44,9 +44,6 @@ def main(argv=None):
         print_help()
         sys.exit(2)
 
-    if wscmd == 'off':
-        return 0
-
     '''If config specified in CL then use that, otherwise search for it'''
     if wscfg:
         uncrustify_config = wscfg
@@ -72,6 +69,11 @@ def main(argv=None):
             ". You must be using uncrustify v" + str(version_min) +
             " or later.")
         sys.exit(2)
+
+    print "whitespace %s %s" % (wscmd,uncrustify_config)
+    print "cwd=%s" % (os.getcwd())
+    if wscmd == 'off':
+        return 0
 
     '''Get a list of source files and apply uncrustify to them'''
     for srcfile in locate(file_patterns, file_ignore_patterns, dir_ignore):
