@@ -20,6 +20,7 @@ Import('env')
 vars = Variables()
 vars.Add(PathVariable('ANDROID_SRC', ' Base directory of Android source tree', os.environ.get('ANDROID_SRC')))
 vars.Add(PathVariable('ANDROID_NDK', ' Base directory of Android NDK', os.environ.get('ANDROID_NDK')))
+vars.Add('ANDROID_TARGET', ' Target to be used for the build', os.environ.get('ANDROID_TARGET'))
 vars.Add(EnumVariable('ANDROID_API_LEVEL', ' Android API level (5 through 9)', 
                       os.environ.get('ANDROID_API_LEVEL'), allowed_values=('5', '8', '9', ''),  map={}, ignorecase=0))
 vars.Update(env)
@@ -34,6 +35,9 @@ if '' == env.subst('$ANDROID_SRC'):
    print 'ANDROID_SRC variable is required'
    Exit()
 
+if '' == env.subst('$ANDROID_TARGET'):
+   env['ANDROID_TARGET'] = 'generic'
+      
 if '' == env.subst('$ANDROID_API_LEVEL'):
    env['ANDROID_API_LEVEL'] = '8'
 
@@ -121,7 +125,7 @@ else:
     env['CXX'] = '$ANDROID_TOOLS/arm-eabi-g++'
     env['LINK'] = '$ANDROID_TOOLS/arm-eabi-gcc'
 
-env['ANDROID_TARGET'] = 'generic'
+#env['ANDROID_TARGET'] = 'generic'
 
 # Android include paths
 if ndkVersion >= 5:
