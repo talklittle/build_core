@@ -18,7 +18,7 @@ import os
 vars = Variables()
 
 # Common build variables
-vars.Add(EnumVariable('OS', 'Target OS', 'linux', allowed_values=('linux', 'windows', 'android', 'android_donut', 'maemo')))
+vars.Add(EnumVariable('OS', 'Target OS', 'linux', allowed_values=('linux', 'windows', 'android', 'android_donut', 'maemo', 'darwin')))
 vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86-64', 'IA64', 'arm', 'x86_bullseye')))
 vars.Add(EnumVariable('VARIANT', 'Build variant', 'debug', allowed_values=('debug', 'release')))
 vars.Add(EnumVariable('DOCS', '''Output doc type. Setting the doc type to "dev" will produce HTML 
@@ -70,6 +70,8 @@ elif env['OS'] == 'android':
 elif env['OS'] == 'android_donut':
     env['OS_GROUP'] = 'posix'
 elif env['OS'] == 'maemo':
+    env['OS_GROUP'] = 'posix'
+elif env['OS'] == 'darwin':
     env['OS_GROUP'] = 'posix'
 else:
     print 'Unsupported OS/CPU combination'
