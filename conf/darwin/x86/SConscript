@@ -22,9 +22,10 @@ env.SConscript(['../SConscript'])
 env.Append(CPPDEFINES=['QCC_CPU_X86'])
 
 # Force 32-bit builds
-env.Append(CXXFLAGS=['-m32'])
-env.Append(CFLAGS=['-m32'])
-env.Append(LINKFLAGS=['-m32'])
+ccld = ['-arch', 'i386', '-arch', 'x86_64', '-mmacosx-version-min=10.5.4']
+env.Append(CXXFLAGS=ccld)
+env.Append(CFLAGS=ccld)
+env.Append(LINKFLAGS=ccld)
 
 
 
