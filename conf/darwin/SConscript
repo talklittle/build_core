@@ -19,8 +19,7 @@ import os
 # Darwin specific flags
 env.Append(CPPDEFINES=['QCC_OS_DARWIN'])
 
-env.Append(CFLAGS=['-Wall',
-                   '-Werror=non-virtual-dtor',
+env.Append(CPPLAGS=['-Wall',
                    '-pipe',
                    '-std=c99',
                    '-fno-strict-aliasing',
@@ -33,7 +32,6 @@ env.Append(CXXFLAGS=['-Wall',
                      '-fno-rtti',
                      '-fno-exceptions',
                      '-fno-strict-aliasing',
-                     '-Wno-long-long',
                      '-Wno-deprecated'])
 
 # Debug/Release Variants
