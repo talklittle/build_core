@@ -36,11 +36,11 @@ env = Environment(variables = vars)
 
 # Some tool aren't in default path
 if os.environ.has_key('JAVA_HOME'):
-    env.PrependENVPath('PATH', os.environ['JAVA_HOME'] + '/bin')
+    env.PrependENVPath('PATH', os.path.normpath(os.environ['JAVA_HOME'] + '/bin'))
 if os.environ.has_key('DOXYGEN_HOME'):
-    env.PrependENVPath('PATH', os.environ['DOXYGEN_HOME'] + '/bin')
+    env.PrependENVPath('PATH', os.path.normpath(os.environ['DOXYGEN_HOME'] + '/bin'))
 if os.environ.has_key('GRAPHVIZ_HOME'):
-    env.PrependENVPath('PATH', os.environ['GRAPHVIZ_HOME'] + '/bin')
+    env.PrependENVPath('PATH', os.path.normpath(os.environ['GRAPHVIZ_HOME'] + '/bin'))
 path = env['ENV']['PATH']
 
 # Recreate the environment with the correct path
