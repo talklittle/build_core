@@ -36,6 +36,14 @@ env.Append(CPPDEFINES=['QCC_OS_WINDOWS',
                        '_UNICODE',
                        'WIN32_LEAN_AND_MEAN'])
 
+# Set MS OS version number
+if env['OS'] == 'win7':
+    # Windows 7
+    env.Append(CPPDEFINES=[('_WIN32_WINNT', '_WIN32_WINNT_WIN7')])
+elif env['OS'] == 'winxp':
+    # WinXP SP3
+    env.Append(CPPDEFINES=[('_WIN32_WINNT', '_WIN32_WINNT_WINXP')])
+                               
 # Suppress specific warnings
 env.Append(CXXFLAGS=['/wd4355'])
 
