@@ -22,10 +22,13 @@ vars.Add(EnumVariable('OS', 'Target OS', 'linux', allowed_values=('linux', 'win7
 vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86-64', 'IA64', 'arm', 'x86_bullseye')))
 vars.Add(EnumVariable('VARIANT', 'Build variant', 'debug', allowed_values=('debug', 'release')))
 vars.Add(EnumVariable('DOCS', '''Output doc type. Setting the doc type to "dev" will produce HTML 
-      output that includes all developer files not just the public API.
-     ''', 'none', allowed_values=('none', 'pdf', 'html', 'dev')))
+    output that includes all developer files not just the public API.
+    ''', 'none', allowed_values=('none', 'pdf', 'html', 'dev')))
 vars.Add(EnumVariable('MSVC_VERSION', 'MSVC compiler version - Windows', '9.0', allowed_values=('8.0', '9.0', '10.0')))
 vars.Add(EnumVariable('WS', 'Whitespace Policy Checker', 'check', allowed_values=('check', 'detail', 'fix', 'off')))
+vars.Add(EnumVariable('JAVAVERSION', '''The version of Java pointed to by the JAVA_HOME
+    environment variable. This is not used to select one version of
+    the Java comiler vs. another.''', '1.6', allowed_values=('1.5', '1.6')))
 
 # Standard variant directories
 build_dir = 'build/${OS}/${CPU}/${VARIANT}'
