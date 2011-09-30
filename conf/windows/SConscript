@@ -43,7 +43,7 @@ if env['OS'] == 'win7':
 elif env['OS'] == 'winxp':
     # WinXP SP3
     env.Append(CPPDEFINES=[('_WIN32_WINNT', '_WIN32_WINNT_WINXP')])
-    env.Append(CPPDEFINES=[('NTDDI_VERSION', 'NTDDI_WINXPSP3')])
+    env.Append(CPPDEFINES=[('NTDDI_VERSION', '0x05010300')])
                                
 # Suppress specific warnings
 env.Append(CXXFLAGS=['/wd4355'])
