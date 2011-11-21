@@ -57,8 +57,8 @@ env.Append(LINKFLAGS=['/NODEFAULTLIB:libcmt.lib'])
 
 # Debug/Release variants
 if env['VARIANT'] == 'debug':
-   env.Append(CFLAGS=['/MDd', '/Zi', '/Od'])
-   env.Append(CXXFLAGS=['/MDd', '/Zi', '/Od', '/Gd'])
+   env.Append(CFLAGS=['/MD', '/Zi', '/Od'])
+   env.Append(CXXFLAGS=['/MD', '/Zi', '/Od', '/Gd'])
    env.Append(LINKFLAGS=['/debug'])
    env.Append(JAVACFLAGS='-g -Xlint -Xlint:-serial')
 else:
