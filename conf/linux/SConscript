@@ -28,6 +28,7 @@ env.Append(CFLAGS=['-Wall',
 
 env.Append(CXXFLAGS=['-Wall',
                      '-Werror=non-virtual-dtor',
+                     '-Wno-int-to-pointer-cast',
                      '-pipe',
                      '-std=c++98',
                      '-fno-rtti',
