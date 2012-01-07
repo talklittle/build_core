@@ -1,4 +1,4 @@
-# Copyright 2010 - 2011, Qualcomm Innovation Center, Inc.
+# Copyright 2010 - 2012, Qualcomm Innovation Center, Inc.
 # 
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ def javadoc_generator(source, target, env, for_signature):
    javadoc_windowtitle = '-windowtitle \"%s\"' % (env['PROJECT_LONG_NAME'])
    javadoc_doctitle = '-doctitle \"%s<br/><h3>%s</h3>\"' % (env['PROJECT_LONG_NAME'], env['PROJECT_NUMBER'])
    javadoc_header = '-header \"<b>%s</b>\"' % (env['PROJECT_SHORT_NAME'])
-   javadoc_bottom = '-bottom \"' + "<small>%s %s ($(%s$))<br/>Copyright &copy; 2011 Qualcomm Innovation Center, Inc.<br/>This document is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License; provided,<br/>that (i) any source code incorporated in this document is licensed under the Apache License version 2.0<br/>and (ii) <b>THIS DOCUMENT AND ALL INFORMATION CONTAIN HEREIN ARE PROVIDED ON AN \"AS-IS\" BASIS WITHOUT WARRANTY OF ANY KIND</b>.<br/><a href='http://creativecommons.org/licenses/by-sa/3.0'>Creative Commons Attribution-Share Alike 3.0 Unported License</a><br/><b>MAY CONTAIN U.S. AND INTERNATIONAL EXPORT CONTROLLED INFORMATION</b><br/></small>" % (env['PROJECT_LONG_NAME'], env['PROJECT_NUMBER'], datetime.now().strftime('%a %b %d %H:%M:%S %Y')) + '\"'
+   javadoc_bottom = '-bottom \"' + "<small>%s %s ($(%s$))<br/>Copyright &copy; 2012 Qualcomm Innovation Center, Inc.<br/>This document is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License; provided,<br/>that (i) any source code incorporated in this document is licensed under the Apache License version 2.0<br/>and (ii) <b>THIS DOCUMENT AND ALL INFORMATION CONTAIN HEREIN ARE PROVIDED ON AN \"AS-IS\" BASIS WITHOUT WARRANTY OF ANY KIND</b>.<br/><a href='http://creativecommons.org/licenses/by-sa/3.0'>Creative Commons Attribution-Share Alike 3.0 Unported License</a><br/><b>MAY CONTAIN U.S. AND INTERNATIONAL EXPORT CONTROLLED INFORMATION</b><br/></small>" % (env['PROJECT_LONG_NAME'], env['PROJECT_NUMBER'], datetime.now().strftime('%a %b %d %H:%M:%S %Y')) + '\"'
    javadoc_overview = ''
    for s in source:
       try:
