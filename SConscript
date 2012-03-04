@@ -31,7 +31,8 @@ vars.Add(PathVariable('GTEST_DIR', 'The path to Google Test (gTest) source code'
 # Standard variant directories
 build_dir = 'build/${OS}/${CPU}/${VARIANT}'
 vars.AddVariables(('OBJDIR', '', build_dir + '/obj'),
-                  ('DISTDIR', '', '#' + build_dir + '/dist'))
+                  ('DISTDIR', '', '#' + build_dir + '/dist'),
+                  ('TESTDIR', '', '#' + build_dir + '/test'))
 
 env = Environment(variables = vars)
 
