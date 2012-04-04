@@ -149,6 +149,14 @@ def writeHeaders():
 #ifndef _STATUS_H
 #define _STATUS_H
 
+#ifndef ALLJOYN_DLLExport /* Used for extern C functions. Add __declspec(dllexport) when using MSVC */
+#  if defined(_MSC_VER) /* MSVC compiler*/
+#    define ALLJOYN_DLLExport __declspec(dllexport)
+#  else /* compiler other than MSVC */
+#    define ALLJOYN_DLLExport
+#  endif /* Compiler type */
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -194,7 +202,7 @@ def writeFooters():
  * @return  C string representation of the status code.
  */
 """)
-        headerOut.write("extern const char* QCC_%sStatusText(QStatus status);" % prefix)
+        headerOut.write("extern ALLJOYN_DLLExport const char* QCC_%sStatusText(QStatus status);" % prefix)
         headerOut.write("""
 
 #ifdef __cplusplus
