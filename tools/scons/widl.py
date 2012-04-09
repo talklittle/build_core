@@ -121,8 +121,8 @@ def parseStatusBlock(blockNode):
             offset = int(node.firstChild.data, 0)
         elif node.localName == 'status':
             if None != codeOut:
-                codeOut.write("                /** %s */\n" % node.getAttribute('comment'))
-                codeOut.write("                const Status %s = %s;\n" % (node.getAttribute('name')[3:], node.getAttribute('value')))
+                codeOut.write("    /** %s */\n" % node.getAttribute('comment'))
+                codeOut.write("    const unsigned short %s = %s;\n" % (node.getAttribute('name')[3:], node.getAttribute('value')))
             offset += 1
         elif node.localName == 'include' and node.namespaceURI == 'http://www.w3.org/2001/XInclude':
             parseInclude(node)
