@@ -65,7 +65,7 @@ if env['VARIANT'] == 'debug':
        env.Append(CPPDEFINES=['_DEBUG', ('_ITERATOR_DEBUG_LEVEL', 2)])
        env.Append(CFLAGS=['/MDd', '/Zi', '/Od'])
        env.Append(CXXFLAGS=['/MDd', '/Zi', '/Od', '/Gd'])
-   else
+   else:
        env.Append(CFLAGS=['/MD', '/Zi', '/Od'])
        env.Append(CXXFLAGS=['/MD', '/Zi', '/Od', '/Gd'])
    env.Append(LINKFLAGS=['/debug'])
