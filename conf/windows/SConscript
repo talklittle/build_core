@@ -57,13 +57,17 @@ env.Append(LINKFLAGS=['/NODEFAULTLIB:libcmt.lib'])
 
 # Debug/Release variants
 if env['VARIANT'] == 'debug':
-   env.Append(CPPDEFINES=['_DEBUG', ('_ITERATOR_DEBUG_LEVEL', 2)])
+   # MSVC 2010 an newer require _ITERATOR_DEBUG_LEVEL specified
+   if env['MSVC_VERSION'] == '10.0':
+       env.Append(CPPDEFINES=['_DEBUG', ('_ITERATOR_DEBUG_LEVEL', 2)])
    env.Append(CFLAGS=['/MD', '/Zi', '/Od'])
    env.Append(CXXFLAGS=['/MD', '/Zi', '/Od', '/Gd'])
    env.Append(LINKFLAGS=['/debug'])
    env.Append(JAVACFLAGS='-g -Xlint -Xlint:-serial')
 else:
-   env.Append(CPPDEFINES=[('_ITERATOR_DEBUG_LEVEL', 0)])
+   # MSVC 2010 an newer require _ITERATOR_DEBUG_LEVEL specified
+   if env['MSVC_VERSION'] == '10.0':
+       env.Append(CPPDEFINES=[('_ITERATOR_DEBUG_LEVEL', 0)])
    env.Append(CFLAGS=['/MD', '/Gy', '/O2', '/Gd'])
    env.Append(CXXFLAGS=['/MD', '/Gy', '/O2'])
    env.Append(LINKFLAGS=['/opt:ref'])
