@@ -57,11 +57,17 @@ env.Append(LINKFLAGS=['/NODEFAULTLIB:libcmt.lib'])
 
 # Debug/Release variants
 if env['VARIANT'] == 'debug':
-   # MSVC 2010 an newer require _ITERATOR_DEBUG_LEVEL specified
+   # MSVC 2010 an newer require _ITERATOR_DEBUG_LEVEL specified to specify 
+   # _ITERATOR_DEBUG_LEVEL _DEBUG must also be specified.  If _DEBUG is also 
+   # specified then the debug version of the multithread and run-time routines
+   # (/MDd') to prevent build errors. 
    if env['MSVC_VERSION'] == '10.0':
        env.Append(CPPDEFINES=['_DEBUG', ('_ITERATOR_DEBUG_LEVEL', 2)])
-   env.Append(CFLAGS=['/MD', '/Zi', '/Od'])
-   env.Append(CXXFLAGS=['/MD', '/Zi', '/Od', '/Gd'])
+       env.Append(CFLAGS=['/MDd', '/Zi', '/Od'])
+       env.Append(CXXFLAGS=['/MDd', '/Zi', '/Od', '/Gd'])
+   else
+       env.Append(CFLAGS=['/MD', '/Zi', '/Od'])
+       env.Append(CXXFLAGS=['/MD', '/Zi', '/Od', '/Gd'])
    env.Append(LINKFLAGS=['/debug'])
    env.Append(JAVACFLAGS='-g -Xlint -Xlint:-serial')
 else:
