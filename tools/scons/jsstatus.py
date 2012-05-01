@@ -132,9 +132,9 @@ def writeHeaders():
 
 #define QCC_MODULE "ALLJOYN_JS"
 
-std::map<NPIdentifier, int32_t> _BusErrorInterface::constants;
+std::map<qcc::String, int32_t> _BusErrorInterface::constants;
 
-std::map<NPIdentifier, int32_t>& _BusErrorInterface::Constants()
+std::map<qcc::String, int32_t>& _BusErrorInterface::Constants()
 {
     if (constants.empty()) {
 """)
