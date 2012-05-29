@@ -64,18 +64,18 @@ if env['VARIANT'] == 'debug':
    if env['MSVC_VERSION'] == '10.0':
        env.Append(CPPDEFINES=['_DEBUG', ('_ITERATOR_DEBUG_LEVEL', 2)])
        env.Append(CFLAGS=['/MDd', '/Zi', '/Od'])
-       env.Append(CXXFLAGS=['/MDd', '/Zi', '/Od', '/Gd'])
+       env.Append(CXXFLAGS=['/MDd', '/Zi', '/Od', '/Gd', '/Ob1'])
    else:
        env.Append(CFLAGS=['/MD', '/Zi', '/Od'])
-       env.Append(CXXFLAGS=['/MD', '/Zi', '/Od', '/Gd'])
+       env.Append(CXXFLAGS=['/MD', '/Zi', '/Od', '/Gd', '/Ob1'])
    env.Append(LINKFLAGS=['/debug'])
    env.Append(JAVACFLAGS='-g -Xlint -Xlint:-serial')
 else:
    # MSVC 2010 an newer require _ITERATOR_DEBUG_LEVEL specified
    if env['MSVC_VERSION'] == '10.0':
        env.Append(CPPDEFINES=[('_ITERATOR_DEBUG_LEVEL', 0)])
-   env.Append(CFLAGS=['/MD', '/Gy', '/O2', '/Gd'])
-   env.Append(CXXFLAGS=['/MD', '/Gy', '/O2'])
+   env.Append(CFLAGS=['/MD', '/Gy', '/O1', '/Ob2', '/Gd'])
+   env.Append(CXXFLAGS=['/MD', '/Gy', '/O1', '/Ob2'])
    env.Append(LINKFLAGS=['/opt:ref'])
    env.Append(JAVACFLAGS='-Xlint -Xlint:-serial')
 
