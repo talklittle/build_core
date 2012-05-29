@@ -161,6 +161,7 @@ typedef enum {""")
     if None != codeOut:
         codeOut.write("""
 
+#include <stdio.h>
 #include "Status.h"
 
 #define CASE(_status) case _status: return #_status 
@@ -169,6 +170,15 @@ typedef enum {""")
         codeOut.write("const char* QCC_%sStatusText(QStatus status)" % prefix)
         codeOut.write("""
 {
+#if defined(NDEBUG)
+    static char code[8];
+#if _Win32
+    _snprintf(code, sizeof(code), "0x%04x", status);
+#else
+    snprintf(code, sizeof(code), "0x%04x", status);
+#endif
+    return code;
+#else
     switch (status) {
 """)
 
@@ -207,6 +217,7 @@ def writeFooters():
         codeOut.write("""    default:
         return "<unknown>";
     }
+#endif
 }
 """)
 
