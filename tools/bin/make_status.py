@@ -172,7 +172,7 @@ typedef enum {""")
 {
 #if defined(NDEBUG)
     static char code[8];
-#if _Win32
+#ifdef _WIN32
     _snprintf(code, sizeof(code), "0x%04x", status);
 #else
     snprintf(code, sizeof(code), "0x%04x", status);
