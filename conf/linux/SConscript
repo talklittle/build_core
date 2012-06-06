@@ -29,12 +29,15 @@ env.Append(CFLAGS=['-Wall',
 env.Append(CXXFLAGS=['-Wall',
                      '-Werror=non-virtual-dtor',
                      '-pipe',
-                     '-std=c++98',
+                     '-std=gnu++0x',
                      '-fno-rtti',
                      '-fno-exceptions',
                      '-fno-strict-aliasing',
                      '-Wno-long-long',
                      '-Wno-deprecated'])
+
+if env['STLPORT'] == 'false':
+    env.Append(CPPDEFINES=[('QCC_NO_STLPORT')])
 
 # Debug/Release Variants
 if env['VARIANT'] == 'debug':

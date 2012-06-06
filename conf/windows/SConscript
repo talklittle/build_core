@@ -17,7 +17,7 @@ import os
 Import('env')
 
 # Windows needs STLPort for compatibility
-env.SConscript(['../../../stlport/SConscript'])
+#env.SConscript(['../../../stlport/SConscript'])
 
 # Set up TMP 
 env['ENV']['TMP'] = os.environ['TMP']
@@ -35,7 +35,11 @@ env.Append(CPPDEFINES=['QCC_OS_WINDOWS',
                        'UNICODE',
                        '_UNICODE',
                        'WIN32_LEAN_AND_MEAN'])
-
+if env['STLPORT'] == 'false':
+    env.Append(CFLAGS=['/EHsc'])
+    env.Append(CXXFLAGS=['/EHsc'])
+    # Windows 7
+    env.Append(CPPDEFINES=[('QCC_NO_STLPORT')])
 # Set MS OS version number
 if env['OS'] == 'win7':
     # Windows 7

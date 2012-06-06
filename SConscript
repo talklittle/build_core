@@ -29,6 +29,7 @@ vars.Add(EnumVariable('MSVC_VERSION', 'MSVC compiler version - Windows', '9.0', 
 vars.Add(EnumVariable('WS', 'Whitespace Policy Checker', 'check', allowed_values=('check', 'detail', 'fix', 'off')))
 vars.Add(PathVariable('GTEST_DIR', 'The path to Google Test (gTest) source code',  os.environ.get('GTEST_DIR'), PathVariable.PathIsDir))
 vars.Add(PathVariable('BULLSEYE_BIN', 'The path to Bullseye Code Coverage',  os.environ.get('BULLSEYE_BIN'), PathVariable.PathIsDir))
+vars.Add(EnumVariable('STLPORT', 'Use STLPort for STL', 'true', allowed_values=('false', 'true')))
 
 # Standard variant directories
 build_dir = 'build/${OS}/${CPU}/${VARIANT}'
