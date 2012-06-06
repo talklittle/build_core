@@ -41,6 +41,9 @@ if '' == env.subst('$ANDROID_TARGET'):
 if '' == env.subst('$ANDROID_API_LEVEL'):
    env['ANDROID_API_LEVEL'] = '8'
 
+if env['STLPORT'] == 'false':
+    env.Append(CPPDEFINES=[('QCC_NO_STLPORT')])
+
 # Override MSVC build settings when building on windows.
 if 'win32' == env.subst('$HOST_OS'):
    env['OBJPREFIX']      = ''
@@ -130,7 +133,9 @@ else:
 # Android include paths
 if ndkVersion >= 5:
    env.Append(CPPPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/include',
-                       '$ANDROID_NDK/sources/cxx-stl/system/include',
+                       #Using GNU STL.
+                       '$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/include',
+                       '$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/libs/armeabi/include',
                        '$ANDROID_SRC/external/bluetooth/bluez/include',
                        '$ANDROID_SRC/external/openssl/include'])
 else:
@@ -141,6 +146,8 @@ else:
 # Android library locations
 if ndkVersion >= 5:
    env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+   #append the location of the gnustl_static library
+   env.Append(LIBPATH=['$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/libs/armeabi'])
    #append the location of the gcc library
    env.Append(LIBPATH=['$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$PREBUILT_HOST_OS/lib/gcc/arm-linux-androideabi/4.4.3/'])
 else:
@@ -154,6 +161,7 @@ env.Append(LIBPATH=['$ANDROID_SRC/out/target/product/$ANDROID_TARGET/system/lib'
 
 # Android link flags\
 if ndkVersion >= 5:
+   env.Append(CXXFLAGS=['-std=gnu++0x'])
    env.Append(LINKFLAGS=['-Wl,--gc-sections',
                          '-Wl,-z,nocopyreloc',
                          '--sysroot=$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm',
