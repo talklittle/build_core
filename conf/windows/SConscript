@@ -35,11 +35,10 @@ env.Append(CPPDEFINES=['QCC_OS_WINDOWS',
                        'UNICODE',
                        '_UNICODE',
                        'WIN32_LEAN_AND_MEAN'])
-if env['STLPORT'] == 'false':
-    env.Append(CFLAGS=['/EHsc'])
-    env.Append(CXXFLAGS=['/EHsc'])
-    # Windows 7
-    env.Append(CPPDEFINES=[('QCC_NO_STLPORT')])
+
+env.Append(CFLAGS=['/EHsc'])
+env.Append(CXXFLAGS=['/EHsc'])
+
 # Set MS OS version number
 if env['OS'] == 'win7':
     # Windows 7
