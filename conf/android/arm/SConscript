@@ -41,8 +41,6 @@ if '' == env.subst('$ANDROID_TARGET'):
 if '' == env.subst('$ANDROID_API_LEVEL'):
    env['ANDROID_API_LEVEL'] = '8'
 
-if env['STLPORT'] == 'false':
-    env.Append(CPPDEFINES=[('QCC_NO_STLPORT')])
 
 # Override MSVC build settings when building on windows.
 if 'win32' == env.subst('$HOST_OS'):
