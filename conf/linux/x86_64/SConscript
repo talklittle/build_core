@@ -20,7 +20,7 @@ env.SConscript(['../SConscript'])
 
 # Linux specific flags
 env.Append(CPPDEFINES=['QCC_CPU_X86'])
-env.Append(CPPDEFINES=['QCC_CPU_IA64'])
+env.Append(CPPDEFINES=['QCC_CPU_X86_64'])
 
 # Force 64-bit builds
 env.Append(CXXFLAGS=['-m64', '-fPIC'])

@@ -20,7 +20,7 @@ from subprocess import Popen, STDOUT, PIPE
 
 def main(argv=None):
     dir_ignore = ["stlport", "build", ".git", ".repo"]
-    file_ignore_patterns = ['\.#.*', 'alljoyn_java\.h', 'Status\.h']
+    file_ignore_patterns = ['\.#.*', 'alljoyn_java\.h', 'Status\.h', 'Status_CPP0x\.h', 'Internal\.h']
     file_patterns = ['*.c', '*.h', '*.cpp', '*.cc']
     valid_commands = ["check", "detail", "fix", "off"]
     uncrustify_config = None
@@ -243,13 +243,20 @@ def locate(file_patterns, file_ignore_patterns, dir_ignore_patterns, root=os.cur
                 if dyr == dip:
                     dirs.remove(dyr)
         '''Remove unwanted files'''
+        files_dict = {}
+        for filename in files:
+            files_dict[filename] = True             
         for filename in files:
             for fip in file_ignore_patterns:
-                if re.search(fip, filename):
-                    files.remove(filename)
+                if re.search(fip, filename) != None:
+                    del files_dict[filename]
+        '''Collect the filtered list'''       
+        filtered_files = []
+        for filename in files_dict.keys():
+            filtered_files.append(filename)        
         '''Filter the remainder using our wanted file pattern list'''
         for pattern in file_patterns:
-            for filename in fnmatch.filter(files, pattern):
+            for filename in fnmatch.filter(filtered_files, pattern):
                 yield os.path.join(path, filename)
 
 if __name__ == "__main__":

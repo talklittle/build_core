@@ -16,9 +16,6 @@
 import os
 Import('env')
 
-# Windows needs STLPort for compatibility
-#env.SConscript(['../../../stlport/SConscript'])
-
 # Set up TMP 
 env['ENV']['TMP'] = os.environ['TMP']
 
@@ -30,8 +27,7 @@ if env['MSVC_VERSION'] >= '8.0':
     env.Append(SHLINKCOM=[env['SHLINKCOM'], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2'])
 
 # Windows specific compiler flags
-env.Append(CPPDEFINES=['QCC_OS_WINDOWS',
-                       'QCC_CPU_X86',
+env.Append(CPPDEFINES=['QCC_CPU_X86',
                        'UNICODE',
                        '_UNICODE',
                        'WIN32_LEAN_AND_MEAN'])
@@ -48,11 +44,15 @@ elif env['OS'] == 'winxp':
     env.Append(CPPDEFINES=[('_WIN32_WINNT', '_WIN32_WINNT_WINXP')])
     env.Append(CPPDEFINES=[('NTDDI_VERSION', '0x05010300')])
                                
-# Suppress specific warnings
+#Suppress specific warnings
 env.Append(CXXFLAGS=['/wd4355'])
 
 env.Append(CFLAGS=['/nologo', '/vmm', '/vmg'])
 env.Append(CXXFLAGS=['/nologo', '/vmm', '/vmg'])
+
+if env['STLPORT'] == 'false':
+    env.Append(CFLAGS=['/EHsc'])
+    env.Append(CXXFLAGS=['/EHsc'])
 
 # Lib setup
 env.Append(LFLAGS=['/NODEFAULTLIB:libcmt.lib'])
