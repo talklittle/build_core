@@ -142,7 +142,10 @@ else:
 #env['ANDROID_TARGET'] = 'generic'
 
 # Android include paths
-if ndkVersion >= 5:
+if (env.subst('$ANDROID_NDK_VERSION') == '5' or 
+    env.subst('$ANDROID_NDK_VERSION') == '6' or
+    env.subst('$ANDROID_NDK_VERSION') == '7' or
+    env.subst('$ANDROID_NDK_VERSION') == '8'):
    env.Append(CPPPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/include',
                        #Using GNU STL.
                        '$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/include',
@@ -155,11 +158,19 @@ else:
                         '$ANDROID_SRC/external/openssl/include'])
 
 # Android library locations
-if ndkVersion >= 5:
-       #append the location of the gnustl_static library
+if (env.subst('$ANDROID_NDK_VERSION') == '5' or 
+    env.subst('$ANDROID_NDK_VERSION') == '6'):
+   #append the location of the libstdc++ library
    env.Append(LIBPATH=['$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/libs/armeabi'])
    
    env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+   #append the location of the gcc library
+   env.Append(LIBPATH=['$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$PREBUILT_HOST_OS/lib/gcc/arm-linux-androideabi/4.4.3/'])
+elif (env.subst('$ANDROID_NDK_VERSION') == '7' or 
+      env.subst('$ANDROID_NDK_VERSION') == '8'):
+   env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+   #append the location of the gnustl_static library
+   env.Append(LIBPATH=['$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/libs/armeabi'])
    #append the location of the gcc library
    env.Append(LIBPATH=['$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$PREBUILT_HOST_OS/lib/gcc/arm-linux-androideabi/4.4.3/'])
 else:
