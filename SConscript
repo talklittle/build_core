@@ -53,6 +53,8 @@ path = env['ENV']['PATH']
 
 # Recreate the environment with the correct path
 if env['OS'] == 'win8' or env['OS'] == 'win8_nt' or env['OS'] == 'win7' or env['OS'] == 'winxp':
+    if env['OS'] == 'win8':
+        vars.Add(EnumVariable('APPX_CXXFLAGS', 'Include appx dependencies', 'true', allowed_values=('false', 'true')))
     if env['CPU'] == 'x86':
         env = Environment(variables = vars, TARGET_ARCH='x86', MSVC_VERSION='${MSVC_VERSION}', ENV={'PATH': path})
         print 'Building for 32 bit Windows'
@@ -73,7 +75,7 @@ else:
 # Pin some options for specific platforms
 if env['OS'] == 'win8':
     env['BD'] = "on"
-	
+
 Help(vars.GenerateHelpText(env))
 
 # Validate build vars
@@ -141,20 +143,13 @@ def status_action(target, source, env):
     cpp0x_namespace = 'AllJoyn'
     cpp0x_cfile = os.path.join(cfile_path, "%s_CPP0x%s" % (base_filename, ext))
     cpp0x_hfile = os.path.join(hfile_path, "%s_CPP0x.h" % base_filename)
-    
     base,rest = str(hfile).rsplit('inc' + os.path.sep)
-    if env['OS'] == 'win8': 
-	return make_status.main(['--base=%s' % base,
+    return make_status.main(['--base=%s' % base,
                              '--code=%s' % cfile,
                              '--header=%s' % hfile,
-	                     '--cpp0xnamespace=%s' % cpp0x_namespace,
+                             '--cpp0xnamespace=%s' % cpp0x_namespace,
                              '--cpp0xcode=%s' % cpp0x_cfile,
                              '--cpp0xheader=%s' % cpp0x_hfile,
-                             str(source[0])])
-    else:
-	return make_status.main(['--base=%s' % base,
-                             '--code=%s' % cfile,
-                             '--header=%s' % hfile,
                              str(source[0])])
 
 statusBuilder = Builder(action = status_action,
