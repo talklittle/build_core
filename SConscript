@@ -143,6 +143,7 @@ def status_action(target, source, env):
     cpp0x_namespace = 'AllJoyn'
     cpp0x_cfile = os.path.join(cfile_path, "%s_CPP0x%s" % (base_filename, ext))
     cpp0x_hfile = os.path.join(hfile_path, "%s_CPP0x.h" % base_filename)
+    comment_cfile = os.path.join(cfile_path, "StatusComment.cc")
     base,rest = str(hfile).rsplit('inc' + os.path.sep)
     return make_status.main(['--base=%s' % base,
                              '--code=%s' % cfile,
@@ -150,6 +151,7 @@ def status_action(target, source, env):
                              '--cpp0xnamespace=%s' % cpp0x_namespace,
                              '--cpp0xcode=%s' % cpp0x_cfile,
                              '--cpp0xheader=%s' % cpp0x_hfile,
+			     '--commentCode=%s' % comment_cfile,
                              str(source[0])])
 
 statusBuilder = Builder(action = status_action,

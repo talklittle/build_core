@@ -40,13 +40,14 @@ def openFile(name, type):
 def main(argv=None):
     """
     make_status --header <header_file> --code <code_file> --prefix <prefix> --base <base_dir> [--cpp0xnamespace <cpp0x_namespace>] 
-                [--cpp0xcode <cpp0x_code_file>] [--cpp0xheader <cpp0x_header_file>] [--deps <dep_file>] [--help]
+                [--cpp0xcode <cpp0x_code_file>] [--cpp0xheader <cpp0x_header_file>] [--commenCode<comment_code_file>] [--deps <dep_file>] [--help]
     Where:
       <header_file>       - Output "C" header file
       <code_file>         - Output "C" code
       <cpp0x_namespace>   - C++x0 namespace
       <cpp0x_header_file> - Output C++x0 header file
       <cpp0x_code_file>   - Output C++x0 code
+      <comment_code_file> - Output code that maps status to comment
       <prefix>            - Prefix which is unique across all projects (see Makefile XXX_DIR)
       <base_dir>          - Root directory for xi:include directives
       <dep_file>          - Ouput makefile dependency file
@@ -62,6 +63,7 @@ def main(argv=None):
     global CPP0xHeaderOut
     global CPP0xNamespace
     global CPP0xCodeOut
+    global CommentCodeOut
 
     headerOut = None
     codeOut = None
@@ -71,12 +73,13 @@ def main(argv=None):
     CPP0xHeaderOut = None
     CPP0xNamespace = None
     CPP0xCodeOut = None
+    CommentCodeOut = None
 
     if argv is None:
         argv = sys.argv[1:]
 
     try:
-        opts, fileArgs = getopt.getopt(argv, "h", ["help", "header=", "code=", "dep=", "base=", "prefix=", "cpp0xnamespace=", "cpp0xcode=", "cpp0xheader="])
+        opts, fileArgs = getopt.getopt(argv, "h", ["help", "header=", "code=", "dep=", "base=", "prefix=", "cpp0xnamespace=", "cpp0xcode=", "cpp0xheader=", "commentCode="])
         for o, a in opts:
             if o in ("-h", "--help"):
                 print __doc__
@@ -97,6 +100,8 @@ def main(argv=None):
                 prefix = a
             if o in ("--cpp0xnamespace"):
                 CPP0xNamespace = a
+            if o in ("--commentCode"):
+                CommentCodeOut = openFile(a, 'w')
 
         if None == headerOut or None == codeOut:
             raise Error("Must specify both --header and --code")
@@ -218,6 +223,45 @@ const char* QCC_%sStatusText(QStatus status)""" % prefix)
     switch (status) {
 """)
 
+    if None != CommentCodeOut:
+	CommentCodeOut.write("""
+/**
+ * @file
+ * This file maps a QStatus code to the detailed comment informaion
+ *
+ * Note: This file is generated during the make process.
+ *
+ * Copyright 2012, Qualcomm Innovation Center, Inc.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+#include <unordered_map>
+#include <qcc/Mutex.h>
+#include <qcc/platform.h>
+#include <Status.h>
+
+#if defined(QCC_OS_GROUP_WINRT) && !defined(NDEBUG)
+namespace AllJoyn {
+
+static std::unordered_map<uint32_t, const char *> statusMap;
+static bool statusMapInited = false;
+static qcc::Mutex statusMapLock;
+
+void InitStatusMap()
+{
+""")
+
 def writeCPP0xFooters():
     global CPP0xHeaderOut
     global CPP0xNamespace
@@ -250,6 +294,24 @@ def writeCPP0xFooters():
 
 }
 """)
+    if None != CommentCodeOut:
+        CommentCodeOut.write("""
+}
+
+const char* QCC_StatusComment(uint32_t status)
+{
+    statusMapLock.Lock();
+    if (!statusMapInited) {
+        InitStatusMap();
+        statusMapInited = true;
+    }
+    statusMapLock.Unlock();
+    return statusMap[status];
+}
+
+}
+#endif
+""")
 
 def parseAndWriteCPP0xDocument(fileName):
     dom = minidom.parse(fileName)
@@ -280,6 +342,8 @@ def parseAndWriteCPP0xStatusBlock(blockNode):
                     CPP0xHeaderOut.write(",\n    %s = %s /**< %s */" % (node.getAttribute('name'), node.getAttribute('value'), node.getAttribute('comment')))
             if None != CPP0xCodeOut:
                 CPP0xCodeOut.write("        CASE(QStatus::%s);\n" % (node.getAttribute('name')))
+	    if None != CommentCodeOut:
+                CommentCodeOut.write("    statusMap[(uint32_t)%s] = \"%s\";\n" % (node.getAttribute('name'),	node.getAttribute('comment')))
             offset += 1
         elif node.localName == 'include' and node.namespaceURI == 'http://www.w3.org/2001/XInclude':
             parseAndWriteCPP0xInclude(node)
