@@ -140,7 +140,9 @@ def main(argv=None):
         if None != CPP0xHeaderOut:
             CPP0xHeaderOut.close()
         if None != CPP0xCodeOut:
-            CPP0xCodeOut.close()            
+            CPP0xCodeOut.close()
+        if None != CommentCodeOut:
+            CommentCodeOut.close()
         if None != depOut:
             depOut.close()
     except getopt.error, msg:
@@ -156,7 +158,9 @@ def main(argv=None):
         if None != CPP0xCodeOut:
             os.unlink(CPP0xCodeOut.name)
         if None != CPP0xHeaderOut:
-            os.unlink(CPP0xHeaderOut.name)            
+            os.unlink(CPP0xHeaderOut.name)
+        if None != CommentCodeOut:
+            os.unlink(CommentCodeOut.name)
         if None != depOut:
             os.unlink(depOut.name)
         return 1

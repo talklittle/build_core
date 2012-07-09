@@ -131,6 +131,7 @@ import make_status
 def status_emitter(target, source, env):
     base,ext = SCons.Util.splitext(str(target[0]))
     target.append('inc/' + os.path.basename(base + '.h'))
+    target.append(base + 'Comment.cc') # Append target StatusComment.cc
     return target, source
 
 def status_action(target, source, env):
@@ -143,7 +144,7 @@ def status_action(target, source, env):
     cpp0x_namespace = 'AllJoyn'
     cpp0x_cfile = os.path.join(cfile_path, "%s_CPP0x%s" % (base_filename, ext))
     cpp0x_hfile = os.path.join(hfile_path, "%s_CPP0x.h" % base_filename)
-    comment_cfile = os.path.join(cfile_path, "StatusComment.cc")
+    comment_cfile = os.path.join(cfile_path, "%sComment%s" % (base_filename, ext))
     base,rest = str(hfile).rsplit('inc' + os.path.sep)
     return make_status.main(['--base=%s' % base,
                              '--code=%s' % cfile,
