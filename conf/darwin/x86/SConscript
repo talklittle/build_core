@@ -14,15 +14,53 @@
 # 
 
 Import('env')
+import os
 
 # Import common linux setttings
 env.SConscript(['../SConscript'])
 
+vars = Variables()
+vars.Add(PathVariable('SDKROOT', ' Base directory of Mac/iOS SDK for target', os.environ.get('SDKROOT')))
+vars.Add(PathVariable('SYSTEM_DEVELOPER_DIR', ' Base directory for developer tools', os.environ.get('SYSTEM_DEVELOPER_DIR')))
+vars.Update(env)
+Help(vars.GenerateHelpText(env))
+
+# Verify dependencies
+if '' == env.subst('$SDKROOT'):
+   print 'SDKROOT variable is required'
+   Exit()
+
+if '' == env.subst('$SYSTEM_DEVELOPER_DIR'):
+    env['SYSTEM_DEVELOPER_DIR'] = '/Developer'
+
 # Darwing specific flags
 env.Append(CPPDEFINES=['QCC_CPU_X86'])
 
+env['IPHONEOS_PLATFORM_DIR'] = '$SYSTEM_DEVELOPER_DIR/Platforms/iPhoneOS.platform'
+
+env['PATH'] = '$IPHONE_OS_PLATFORM_DIR/Developer/usr/bin:$SYSTEM_DEVELOPER_DIR/usr/bin:$PATH'
+
+env['CC'] = '$IPHONEOS_PLATFORM_DIR/Developer/usr/bin/clang'
+env['CXX'] = '$IPHONEOS_PLATFORM_DIR/Developer/usr/bin/clang++'
+
+env.Append(CFLAGS=[
+            '-fdiagnostics-show-category=id',
+            '-fdiagnostics-parseable-fixits',
+            '-fpascal-strings',
+            '-Wreturn-type',
+            '-Wparentheses',
+            '-Wswitch',
+            '-Wno-unused-parameter',
+            '-Wunused-variable', 
+            '-Wunused-value'])
+            
+env.Append(CXXFLAGS=[
+            '-fno-rtti',
+            '-fno-exceptions'])
+
 # Force 32-bit builds
 ccld = ['-arch', 'i386', '-arch', 'x86_64', '-mmacosx-version-min=10.5.4']
+
 env.Append(CXXFLAGS=ccld)
 env.Append(CFLAGS=ccld)
 env.Append(LINKFLAGS=ccld)
