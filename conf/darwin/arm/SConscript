@@ -1,0 +1,89 @@
+# Copyright 2010 - 2011, Qualcomm Innovation Center, Inc.
+# 
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+# 
+#        http://www.apache.org/licenses/LICENSE-2.0
+# 
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+# 
+
+Import('env')
+import os
+
+# Import common linux setttings
+env.SConscript(['../SConscript'])
+
+vars = Variables()
+vars.Add(PathVariable('SDKROOT', ' Base directory of Mac/iOS SDK for target', os.environ.get('SDKROOT')))
+vars.Add(PathVariable('SYSTEM_DEVELOPER_DIR', ' Base directory for developer tools', os.environ.get('SYSTEM_DEVELOPER_DIR')))
+vars.Update(env)
+Help(vars.GenerateHelpText(env))
+
+# Verify dependencies
+if '' == env.subst('$SDKROOT'):
+   print 'SDKROOT variable is required'
+   Exit()
+
+if '' == env.subst('$SYSTEM_DEVELOPER_DIR'):
+    env['SYSTEM_DEVELOPER_DIR'] = '/Developer'
+
+# Darwin on ARM (aka. iOS) specific defines
+env.Append(CPPDEFINES=['QCC_CPU_ARM'])
+env.Append(CPPDEFINES=['QCC_OS_IPHONE'])
+
+env['IPHONEOS_PLATFORM_DIR'] = '$SYSTEM_DEVELOPER_DIR/Platforms/iPhoneOS.platform'
+
+env['PATH'] = '$IPHONE_OS_PLATFORM_DIR/Developer/usr/bin:$SYSTEM_DEVELOPER_DIR/usr/bin:$PATH'
+
+env['CC'] = '$IPHONEOS_PLATFORM_DIR/Developer/usr/bin/clang'
+env['CXX'] = '$IPHONEOS_PLATFORM_DIR/Developer/usr/bin/clang++'
+
+env.Append(CFLAGS=[
+            '-fdiagnostics-show-category=id',
+            '-fdiagnostics-parseable-fixits',
+            '-fpascal-strings',
+            '-Wreturn-type',
+            '-Wparentheses',
+            '-Wswitch',
+            '-Wno-unused-parameter',
+            '-Wunused-variable', 
+            '-Wunused-value'])
+            
+env.Append(CXXFLAGS=[
+            '-fno-rtti',
+            '-fno-exceptions',
+            '-Wc++0x-extensions'])
+            
+if os.environ.get('PLATFORM_NAME') == 'iphonesimulator':
+    env.Append(CPPDEFINES=['QCC_OS_IPHONE_SIMULATOR'])
+    ccld = [
+            '-gdwarf-2',
+            '-arch', 'i686', 
+            '-mthumb',
+            '-miphoneos-version-min=5.1',
+            '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+            '-F', 'System.framework',
+            '-isysroot', '$SDKROOT'
+            ]
+    print 'Using flags for iOS simulator...'
+else:
+    ccld = [
+            '-gdwarf-2',
+            '-arch', 'armv7', 
+            '-mthumb',
+            '-miphoneos-version-min=5.1',
+            '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+            '-F', 'System.framework',
+            '-isysroot', '$SDKROOT'
+            ]
+    print 'Using flags for iOS devices...'
+    
+env.Append(CXXFLAGS=ccld)
+env.Append(CFLAGS=ccld)
+env.Append(LINKFLAGS=ccld)
