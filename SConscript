@@ -19,7 +19,7 @@ vars = Variables()
 
 # Common build variables
 vars.Add(EnumVariable('OS', 'Target OS', 'linux', allowed_values=('linux', 'win7', 'winxp', 'android', 'android_donut', 'maemo', 'darwin')))
-vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86-64', 'IA64', 'arm', 'x86_bullseye')))
+vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86_64', 'x86-64', 'IA64', 'arm', 'x86_bullseye')))
 vars.Add(EnumVariable('VARIANT', 'Build variant', 'debug', allowed_values=('debug', 'release')))
 vars.Add(EnumVariable('BD', 'Have bundled daemon built-in for C++ test samples', 'off', allowed_values=('on', 'off')))
 vars.Add(EnumVariable('DOCS', '''Output doc type. Setting the doc type to "dev" will produce HTML 
@@ -30,6 +30,7 @@ vars.Add(EnumVariable('WS', 'Whitespace Policy Checker', 'check', allowed_values
 vars.Add(PathVariable('GTEST_DIR', 'The path to Google Test (gTest) source code',  os.environ.get('GTEST_DIR'), PathVariable.PathIsDir))
 vars.Add(PathVariable('BULLSEYE_BIN', 'The path to Bullseye Code Coverage',  os.environ.get('BULLSEYE_BIN'), PathVariable.PathIsDir))
 
+    
 # Standard variant directories
 build_dir = 'build/${OS}/${CPU}/${VARIANT}'
 vars.AddVariables(('OBJDIR', '', build_dir + '/obj'),
@@ -52,16 +53,24 @@ if env['OS'] == 'win7' or env['OS'] == 'winxp':
     if env['CPU'] == 'x86':
         env = Environment(variables = vars, TARGET_ARCH='x86', MSVC_VERSION='${MSVC_VERSION}', ENV={'PATH': path})
         print 'Building for 32 bit Windows'
+    elif env['CPU'] == 'x86_64':
+        print 'Building for 64 bit Windows'
+        env = Environment(variables = vars, TARGET_ARCH='x86_64', MSVC_VERSION='${MSVC_VERSION}', ENV={'PATH': path})
     elif env['CPU'] == 'IA64':
+        print 'IA64 specified for CPU,  this options will be deprecated try switching to x86_64'
         print 'Building for 64 bit Windows'
         env = Environment(variables = vars, TARGET_ARCH='x86_64', MSVC_VERSION='${MSVC_VERSION}', ENV={'PATH': path})
     else:
-        print 'Windows CPU must be x86 or IA64'
+        print 'Windows CPU must be x86, x86_64, or IA64'
         Exit()
 elif env['OS'] == 'android':
     env = Environment(variables = vars, tools = ['gnulink', 'gcc', 'g++', 'ar', 'as', 'javac', 'javah', 'jar'], ENV={'PATH': path})
 else:
     env = Environment(variables = vars, ENV={'PATH': path})
+
+if env['OS'] == 'linux':
+    if env['CPU'] == 'x86-64':
+         print 'x86-64 specified for CPU, this build option will be deprecated try switching to x86_64'
 
 Help(vars.GenerateHelpText(env))
 
