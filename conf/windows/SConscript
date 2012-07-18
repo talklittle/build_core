@@ -32,9 +32,6 @@ env.Append(CPPDEFINES=['QCC_CPU_X86',
                        '_UNICODE',
                        'WIN32_LEAN_AND_MEAN'])
 
-env.Append(CFLAGS=['/EHsc'])
-env.Append(CXXFLAGS=['/EHsc'])
-
 # Set MS OS version number
 if env['OS'] == 'win7':
     # Windows 7
@@ -50,9 +47,8 @@ env.Append(CXXFLAGS=['/wd4355'])
 env.Append(CFLAGS=['/nologo', '/vmm', '/vmg'])
 env.Append(CXXFLAGS=['/nologo', '/vmm', '/vmg'])
 
-if env['STLPORT'] == 'false':
-    env.Append(CFLAGS=['/EHsc'])
-    env.Append(CXXFLAGS=['/EHsc'])
+env.Append(CFLAGS=['/EHsc'])
+env.Append(CXXFLAGS=['/EHsc'])
 
 # Lib setup
 env.Append(LFLAGS=['/NODEFAULTLIB:libcmt.lib'])
