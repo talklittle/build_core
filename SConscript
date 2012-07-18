@@ -68,10 +68,12 @@ elif env['OS'] == 'android':
 else:
     env = Environment(variables = vars, ENV={'PATH': path})
 
-# Pin some options for specific platforms
-if env['OS'] == 'win8':
-    env['BD'] = "on"
-
+# Make it a build error to build stand alone daemon on unsupported platforms
+if env['OS'] != 'android' and env['OS'] != 'android_donut' and env['OS'] != 'linux':
+    if env['BD'] != "on":
+	    print "Stand alone daemon is not supported on OS=%s" % (env['OS'])
+	    Exit()
+	
 Help(vars.GenerateHelpText(env))
 
 # Validate build vars
