@@ -68,7 +68,6 @@ if os.environ.get('PLATFORM_NAME') == 'iphonesimulator':
             '-mthumb',
             '-miphoneos-version-min=5.1',
             '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
-            '-F', 'System.framework',
             '-isysroot', '$SDKROOT'
             ]
     print 'Using flags for iOS simulator...'
@@ -79,11 +78,17 @@ else:
             '-mthumb',
             '-miphoneos-version-min=5.1',
             '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
-            '-F', 'System.framework',
             '-isysroot', '$SDKROOT'
             ]
     print 'Using flags for iOS devices...'
     
+ld = [
+      '-framework SystemConfiguration',
+      '-framework Foundation',
+      '-framework System'
+     ]
+    
 env.Append(CXXFLAGS=ccld)
 env.Append(CFLAGS=ccld)
 env.Append(LINKFLAGS=ccld)
+env.Append(LINKFLAGS=ld)
