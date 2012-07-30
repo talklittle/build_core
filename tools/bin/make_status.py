@@ -193,8 +193,8 @@ def writeCPP0xHeaders():
  *    distributed under the License is distributed on an "AS IS" BASIS,
  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *    See the License for the specific language governing permissions and
- *    limitations under the License.   
- */ 
+ *    limitations under the License.
+ */
  
 #pragma once
 
@@ -288,7 +288,7 @@ def writeCPP0xFooters():
         CPP0xHeaderOut.write("extern const char* QCC_%sStatusText(QStatus status);" % prefix)
         CPP0xHeaderOut.write("""
         
-}        
+}
 """)
     if None != CPP0xCodeOut:
         CPP0xCodeOut.write("""    default:
