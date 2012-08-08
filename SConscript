@@ -24,7 +24,7 @@ vars.Add(EnumVariable('VARIANT', 'Build variant', 'debug', allowed_values=('debu
 vars.Add(EnumVariable('BD', 'Have bundled daemon built-in for C++ test samples', 'on', allowed_values=('on', 'off')))
 vars.Add(EnumVariable('DOCS', '''Output doc type. Setting the doc type to "dev" will produce HTML 
     output that includes all developer files not just the public API.
-    ''', 'none', allowed_values=('none', 'pdf', 'html', 'dev', 'chm')))
+    ''', 'none', allowed_values=('none', 'pdf', 'html', 'dev', 'chm', 'doxychm')))
 vars.Add(EnumVariable('MSVC_VERSION', 'MSVC compiler version - Windows', '9.0', allowed_values=('9.0', '10.0', '11.0', '11.0Exp')))
 vars.Add(EnumVariable('WS', 'Whitespace Policy Checker', 'check', allowed_values=('check', 'detail', 'fix', 'off')))
 vars.Add(PathVariable('GTEST_DIR', 'The path to Google Test (gTest) source code',  os.environ.get('GTEST_DIR'), PathVariable.PathIsDir))
