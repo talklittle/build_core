@@ -109,23 +109,26 @@ def writeHeaders():
         for arg in fileArgs:
             depOut.write(" \\\n %s" % arg)
     if None != codeOut:
-        codeOut.write("""//-----------------------------------------------------------------------
-// <copyright file=\"Status.cs\" company=\"Qualcomm Innovation Center, Inc.\">
-// Copyright 2012, Qualcomm Innovation Center, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// </copyright>
-//-----------------------------------------------------------------------
+        codeOut.write("""/**                                                                                                   
+ * @file                                                                                              
+ * This file contains an enumerated list values that QStatus can return                               
+ *                                                                                                    
+ * Note: This file is generated during the make process.                                              
+ *                                                                                                    
+ * Copyright 2009-2011, Qualcomm Innovation Center, Inc.                                              
+ *                                                                                                    
+ *    Licensed under the Apache License, Version 2.0 (the "License");                                 
+ *    you may not use this file except in compliance with the License.                                
+ *    You may obtain a copy of the License at                                                         
+ *                                                                                                    
+ *        http://www.apache.org/licenses/LICENSE-2.0                                                  
+ *                                                                                                    
+ *    Unless required by applicable law or agreed to in writing, software                             
+ *    distributed under the License is distributed on an "AS IS" BASIS,                               
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                        
+ *    See the License for the specific language governing permissions and                             
+ *    limitations under the License.                                                                  
+ */ 
 
 using System;
 using System.Runtime.InteropServices;
@@ -136,7 +139,10 @@ namespace AllJoynUnity
 {
     public partial class AllJoyn
     {
-    public class QStatus
+		/**                                                                                           
+         * Enumerated list of values QStatus can return                                               
+         */ 
+		public class QStatus
         {
             private QStatus(int x)
             {
