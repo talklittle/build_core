@@ -139,10 +139,10 @@ namespace AllJoynUnity
 {
     public partial class AllJoyn
     {
-		/**                                                                                           
+        /**                                                                                           
          * Enumerated list of values QStatus can return                                               
          */ 
-		public class QStatus
+        public class QStatus
         {
             private QStatus(int x)
             {
@@ -150,71 +150,73 @@ namespace AllJoynUnity
                 value = x;
             }
 
-			/** 
-			 * Static constructor
-			 * @param x status to set for QStatus object
-			 */
+            /** 
+             * Static constructor
+             * @param x status to set for QStatus object
+             *
+             * @return a new QStatus object
+             */
             public static implicit operator QStatus(int x)
             {
             
                 return new QStatus(x);
             }
 
-			/** 
-			 * Gets the int value of the QStatus object  
-			 *
-			 * @param x QStatus object to check status
-			 * @return the int value of the QStatus object  
-			 */
+            /** 
+             * Gets the int value of the QStatus object  
+             *
+             * @param x QStatus object to check status
+             * @return the int value of the QStatus object  
+             */
             public static implicit operator int(QStatus x)
             {
             
                 return x.value;
             }
 
-			/** 
-			 * Shortcut to determine if a QStatus is an OK status
-			 *
-			 * @param x QStatus object to check status
-			 * @return true if the status == OK
-			 */
+            /** 
+             * Shortcut to determine if a QStatus is an OK status
+             *
+             * @param x QStatus object to check status
+             * @return true if the status == OK
+             */
             public static bool operator true(QStatus x)
             {
             
                 return (x == OK);
             }
 
-			/** 
-			 * Shortcut to determine if a QStatus is not an OK status
-			 *
-			 * @param x QStatus object to check status
-			 * @return true if the status != OK
-			 */
+            /** 
+             * Shortcut to determine if a QStatus is not an OK status
+             *
+             * @param x QStatus object to check status
+             * @return true if the status != OK
+             */
             public static bool operator false(QStatus x)
             {
             
                 return (x != OK);
             }
 
-			/** 
-			 * Compares the status value of two QStatus objects
-			 *
-			 * @param x QStatus object to compare with
-			 * @param y QStatus object to compare against
-			 * @return true if the status values are equal
-			 */
+            /** 
+             * Compares the status value of two QStatus objects
+             *
+             * @param x QStatus object to compare with
+             * @param y QStatus object to compare against
+             * @return true if the status values are equal
+             */
             public static bool operator ==(QStatus x, QStatus y)
             {
             
                 return x.value == y.value;
             }
 
-			/** 
-			 * Compares two QStatus objects
-			 *
-			 * @param o object to compare against this QStatus
-			 * @return true if two QStatus objects are equals
-			 */
+            /** 
+             * Compares two QStatus objects
+             *
+             * @param o object to compare against this QStatus
+             * @return true if two QStatus objects are equals
+             */
             public override bool Equals(object o) 
             {
                 try
@@ -227,59 +229,59 @@ namespace AllJoynUnity
                 }
             }
 
-			/** 
-			 * Gets the numeric error code
-			 *
-			 * @return the numeric error code
-			 */
+            /** 
+             * Gets the numeric error code
+             *
+             * @return the numeric error code
+             */
             public override int GetHashCode()
             {
             
                 return value;
             }
 
-			/** 
-			 * Gets a string representing the QStatus value
-			 *
-			 * @return a string representing the QStatus value
-			 */
+            /** 
+             * Gets a string representing the QStatus value
+             *
+             * @return a string representing the QStatus value
+             */
             public override string ToString()
             {
             
                 return Marshal.PtrToStringAnsi(QCC_StatusText(value));
             }
 
-			/** 
-			 * Gets the string representation of the QStatus value
-			 *
-			 * @param x QStatus object to get value from 
-			 * @return the string representation of the QStatus value
-			 */
+            /** 
+             * Gets the string representation of the QStatus value
+             *
+             * @param x QStatus object to get value from 
+             * @return the string representation of the QStatus value
+             */
             public static implicit operator string(QStatus x)
             {
             
                 return x.value.ToString();
             }
 
-			/** 
-			 * Checks if two QStatus objects are not equal
-			 *
-			 * @param x QStatus object to compare with
-			 * @param y QStatus object to compare against
-			 * @return true if two QStatus objects are not equal
-			 */
+            /** 
+             * Checks if two QStatus objects are not equal
+             *
+             * @param x QStatus object to compare with
+             * @param y QStatus object to compare against
+             * @return true if two QStatus objects are not equal
+             */
             public static bool operator !=(QStatus x, QStatus y)
             {
             
                 return x.value != y.value;
             }
 
-			/** 
-			 * checks if the QStatus object does not equal OK
-			 * 
-			 * @param x QStatus object to compare against
-			 * @return true if the QStatus object does not equal OK
-			 */
+            /** 
+             * checks if the QStatus object does not equal OK
+             * 
+             * @param x QStatus object to compare against
+             * @return true if the QStatus object does not equal OK
+             */
             public static bool operator !(QStatus x)
             {
             
