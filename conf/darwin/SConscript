@@ -35,12 +35,14 @@ env.Append(CXXFLAGS=['-Wall',
                      '-Wno-deprecated'])
 
 # Debug/Release Variants
-if env['VARIANT'] == 'debug':
+if env['VARIANT'] == 'debug' or env['VARIANT'] == 'Debug':
    env.Append(CFLAGS='-glldb')
    env.Append(CXXFLAGS='-glldb')
    env.Append(JAVACFLAGS='-g -Xlint -Xlint:-serial')
+   print 'Using debug settings for darwin build...'
 else:
    env.Append(CFLAGS='-O3')
    env.Append(CXXFLAGS='-O3')
    env.Append(LINKFLAGS='-s')
    env.Append(JAVACFLAGS='-Xlint -Xlint:-serial')
+   print 'Using release settings for darwin build...'

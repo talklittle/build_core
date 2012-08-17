@@ -61,31 +61,55 @@ env.Append(CXXFLAGS=[
             '-Wc++0x-extensions'])
             
 if os.environ.get('PLATFORM_NAME') == 'iphonesimulator':
-    env.Append(CPPDEFINES=['QCC_OS_IPHONE_SIMULATOR'])
-    ccld = [
-            '-gdwarf-2',
-            '-arch', 'i686', 
-            '-mthumb',
-            '-miphoneos-version-min=5.1',
-            '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
-            '-isysroot', '$SDKROOT'
-            ]
     print 'Using flags for iOS simulator...'
+    env.Append(CPPDEFINES=['QCC_OS_IPHONE_SIMULATOR'])
+    print env['VARIANT']
+    if env['VARIANT'] == 'Debug' or env['VARIANT'] == 'debug':
+        ccld = [
+                '-gdwarf-2',
+                '-arch', 'i686', 
+                '-mthumb',
+                '-miphoneos-version-min=5.1',
+                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+                '-isysroot', '$SDKROOT'
+                ]
+        print 'Using iOS debug configuration'
+    else:
+        ccld = [
+                '-arch', 'i686', 
+                '-mthumb',
+                '-miphoneos-version-min=5.1',
+                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+                '-isysroot', '$SDKROOT'
+                ]        
+        print 'Using iOS release configuration'
+
 else:
-    ccld = [
-            '-gdwarf-2',
-            '-arch', 'armv7', 
-            '-mthumb',
-            '-miphoneos-version-min=5.1',
-            '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
-            '-isysroot', '$SDKROOT'
-            ]
     print 'Using flags for iOS devices...'
+    if env['VARIANT'] == 'Debug' or env['VARIANT'] == 'debug':
+        ccld = [
+                '-gdwarf-2',
+                '-arch', 'armv7', 
+                '-mthumb',
+                '-miphoneos-version-min=5.1',
+                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+                '-isysroot', '$SDKROOT'
+                ]
+        print 'Using iOS debug configuration'
+    else:
+        ccld = [
+                '-arch', 'armv7', 
+                '-mthumb',
+                '-miphoneos-version-min=5.1',
+                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+                '-isysroot', '$SDKROOT'
+                ]        
+        print 'Using iOS release configuration'
+
     
 ld = [
-      '-framework SystemConfiguration',
-      '-framework Foundation',
-      '-framework System'
+      '-framework', 'SystemConfiguration',
+      '-framework', 'Foundation'
      ]
     
 env.Append(CXXFLAGS=ccld)
