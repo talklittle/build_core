@@ -15,8 +15,6 @@
 
 import os
 
-print os.environ.get('VARIANT')
-
 vars = Variables()
 
 # Common build variables
