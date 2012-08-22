@@ -21,8 +21,8 @@ vars = Variables()
 vars.Add(PathVariable('ANDROID_SRC', ' Base directory of Android source tree', os.environ.get('ANDROID_SRC')))
 vars.Add(PathVariable('ANDROID_NDK', ' Base directory of Android NDK', os.environ.get('ANDROID_NDK')))
 vars.Add('ANDROID_TARGET', ' Target to be used for the build', os.environ.get('ANDROID_TARGET'))
-vars.Add(EnumVariable('ANDROID_API_LEVEL', ' Android API level (5 through 9)', 
-                      os.environ.get('ANDROID_API_LEVEL'), allowed_values=('5', '8', '9', ''),  map={}, ignorecase=0))
+vars.Add(EnumVariable('ANDROID_API_LEVEL', ' Android API level (8, 9, 10, 14, 15 or 16)', 
+                      os.environ.get('ANDROID_API_LEVEL'), allowed_values=('8', '9', '10', '14', '15', '16', ''),  map={}, ignorecase=0))
 vars.Update(env)
 
 # Determine Android NDK version
