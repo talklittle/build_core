@@ -18,7 +18,7 @@ import os
 vars = Variables()
 
 # Common build variables
-vars.Add(EnumVariable('OS', 'Target OS', 'linux', allowed_values=('linux', 'win8', 'win8_nt', 'win7', 'winxp', 'android', 'android_donut', 'maemo', 'darwin')))
+vars.Add(EnumVariable('OS', 'Target OS', 'linux', allowed_values=('linux', 'win8', 'win7', 'winxp', 'android', 'android_donut', 'maemo', 'darwin')))
 vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86_64', 'arm', 'x86_bullseye')))
 vars.Add(EnumVariable('VARIANT', 'Build variant', 'debug', allowed_values=('debug', 'release', 'Debug', 'Release')))
 vars.Add(EnumVariable('BD', 'Have bundled daemon built-in for C++ test samples', 'on', allowed_values=('on', 'off')))
@@ -48,7 +48,7 @@ if os.environ.has_key('GRAPHVIZ_HOME'):
 path = env['ENV']['PATH']
 
 # Recreate the environment with the correct path
-if env['OS'] == 'win8' or env['OS'] == 'win8_nt' or env['OS'] == 'win7' or env['OS'] == 'winxp':
+if env['OS'] == 'win8' or env['OS'] == 'win7' or env['OS'] == 'winxp':
     if env['OS'] == 'win8':
         vars.Add(EnumVariable('APPX_CXXFLAGS', 'Include appx dependencies', 'true', allowed_values=('false', 'true')))
     if env['CPU'] == 'x86':
@@ -83,7 +83,7 @@ if env['OS'] == 'linux':
 elif env['OS'] == 'win8': 
     env['OS_GROUP'] = 'winrt'
     env['OS_CONF'] = 'winrt'
-elif env['OS'] == 'win8_nt' or env['OS'] == 'win7' or env['OS'] == 'winxp':
+elif env['OS'] == 'win7' or env['OS'] == 'winxp':
     env['OS_GROUP'] = 'windows'
     env['OS_CONF'] = 'windows'
 elif env['OS'] == 'android':
