@@ -37,6 +37,10 @@ if '' == env.subst('$SYSTEM_DEVELOPER_DIR'):
 env.Append(CPPDEFINES=['QCC_CPU_ARM'])
 env.Append(CPPDEFINES=['QCC_OS_IPHONE'])
 
+env['OBJDIR'] = 'build/${OS}/${CPU}/'+os.environ.get('PLATFORM_NAME')+'/${VARIANT}/obj'
+env['DISTDIR'] = '#build/${OS}/${CPU}/'+os.environ.get('PLATFORM_NAME')+'/${VARIANT}/dist'
+env['TESTDIR'] = '#build/${OS}/${CPU}/'+os.environ.get('PLATFORM_NAME')+'/${VARIANT}/test'
+
 env['IPHONEOS_PLATFORM_DIR'] = '$SYSTEM_DEVELOPER_DIR/Platforms/iPhoneOS.platform'
 
 env['PATH'] = '$IPHONE_OS_PLATFORM_DIR/Developer/usr/bin:$SYSTEM_DEVELOPER_DIR/usr/bin:$PATH'
