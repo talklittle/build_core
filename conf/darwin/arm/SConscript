@@ -43,10 +43,10 @@ env['TESTDIR'] = '#build/${OS}/${CPU}/'+os.environ.get('PLATFORM_NAME')+'/${VARI
 
 env['IPHONEOS_PLATFORM_DIR'] = '$SYSTEM_DEVELOPER_DIR/Platforms/iPhoneOS.platform'
 
-env['PATH'] = '$IPHONE_OS_PLATFORM_DIR/Developer/usr/bin:$SYSTEM_DEVELOPER_DIR/usr/bin:$PATH'
+env['PATH'] = '$DT_TOOLCHAIN_DIR/usr/bin:$IPHONE_OS_PLATFORM_DIR/Developer/usr/bin:$SYSTEM_DEVELOPER_DIR/usr/bin:$PATH'
 
-env['CC'] = '$IPHONEOS_PLATFORM_DIR/Developer/usr/bin/clang'
-env['CXX'] = '$IPHONEOS_PLATFORM_DIR/Developer/usr/bin/clang++'
+env['CC'] = '$DT_TOOLCHAIN_DIR/usr/bin/clang'
+env['CXX'] = '$DT_TOOLCHAIN_DIR/usr/bin/clang++'
 
 env.Append(CFLAGS=[
             '-fdiagnostics-show-category=id',
@@ -73,8 +73,8 @@ if os.environ.get('PLATFORM_NAME') == 'iphonesimulator':
                 '-gdwarf-2',
                 '-arch', 'i686', 
                 '-mthumb',
-                '-miphoneos-version-min=5.1',
-                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+                '-miphoneos-version-min=6.0',
+                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=60000',
                 '-isysroot', '$SDKROOT'
                 ]
         print 'Using iOS debug configuration'
@@ -82,8 +82,8 @@ if os.environ.get('PLATFORM_NAME') == 'iphonesimulator':
         ccld = [
                 '-arch', 'i686', 
                 '-mthumb',
-                '-miphoneos-version-min=5.1',
-                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+                '-miphoneos-version-min=6.0',
+                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=60000',
                 '-isysroot', '$SDKROOT'
                 ]        
         print 'Using iOS release configuration'
@@ -93,19 +93,19 @@ else:
     if env['VARIANT'] == 'Debug' or env['VARIANT'] == 'debug':
         ccld = [
                 '-gdwarf-2',
-                '-arch', 'armv7', 
+                '-arch', 'armv7',
                 '-mthumb',
-                '-miphoneos-version-min=5.1',
-                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+                '-miphoneos-version-min=6.0',
+                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=60000',
                 '-isysroot', '$SDKROOT'
                 ]
         print 'Using iOS debug configuration'
     else:
         ccld = [
-                '-arch', 'armv7', 
+                '-arch', 'armv7',
                 '-mthumb',
-                '-miphoneos-version-min=5.1',
-                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=50100',
+                '-miphoneos-version-min=6.0',
+                '-D__IPHONE_OS_VERSION_MIN_REQUIRED=60000',
                 '-isysroot', '$SDKROOT'
                 ]        
         print 'Using iOS release configuration'
