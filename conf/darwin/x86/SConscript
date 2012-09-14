@@ -40,8 +40,8 @@ env['IPHONEOS_PLATFORM_DIR'] = '$SYSTEM_DEVELOPER_DIR/Platforms/iPhoneOS.platfor
 
 env['PATH'] = '$IPHONE_OS_PLATFORM_DIR/Developer/usr/bin:$SYSTEM_DEVELOPER_DIR/usr/bin:$PATH'
 
-env['CC'] = '$IPHONEOS_PLATFORM_DIR/Developer/usr/bin/clang'
-env['CXX'] = '$IPHONEOS_PLATFORM_DIR/Developer/usr/bin/clang++'
+env['CC'] = '$DT_TOOLCHAIN_DIR/usr/bin/clang'
+env['CXX'] = '$DT_TOOLCHAIN_DIR/usr/bin/clang++'
 
 env.Append(CFLAGS=[
             '-fdiagnostics-show-category=id',
