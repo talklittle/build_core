@@ -48,3 +48,6 @@ else:
    env.Append(CXXFLAGS='-Os')
    env.Append(LINKFLAGS='-s')
    env.Append(JAVACFLAGS='-Xlint -Xlint:-serial')
+   env.MergeFlags('-fvisibility=hidden -fvisibility-inlines-hidden')
+   env.MergeFlags('-fno-asynchronous-unwind-tables -fno-unwind-tables')
+   env.MergeFlags('-ffunction-sections -fdata-sections -Wl,--gc-sections')
