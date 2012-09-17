@@ -28,7 +28,7 @@ env.Append(CPPLAGS=['-Wall',
 env.Append(CXXFLAGS=['-Wall',
                      '-Werror=non-virtual-dtor',
                      '-pipe',
-                     '-std=c++98',
+                     '-std=gnu++11',
                      '-fno-rtti',
                      '-fno-exceptions',
                      '-fno-strict-aliasing',
@@ -36,8 +36,8 @@ env.Append(CXXFLAGS=['-Wall',
 
 # Debug/Release Variants
 if env['VARIANT'] == 'debug' or env['VARIANT'] == 'Debug':
-   env.Append(CFLAGS='-glldb')
-   env.Append(CXXFLAGS='-glldb')
+   env.Append(CFLAGS='-g')
+   env.Append(CXXFLAGS='-g')
    env.Append(JAVACFLAGS='-g -Xlint -Xlint:-serial')
    print 'Using debug settings for darwin build...'
 else:

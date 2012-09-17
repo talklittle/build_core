@@ -19,7 +19,7 @@ vars = Variables()
 
 # Common build variables
 vars.Add(EnumVariable('OS', 'Target OS', 'linux', allowed_values=('linux', 'win8', 'win7', 'winxp', 'android', 'android_donut', 'maemo', 'darwin')))
-vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86_64', 'arm', 'x86_bullseye')))
+vars.Add(EnumVariable('CPU', 'Target CPU', 'x86', allowed_values=('x86', 'x86_64', 'arm', 'armv7', 'armv7s', 'x86_bullseye')))
 vars.Add(EnumVariable('VARIANT', 'Build variant', 'debug', allowed_values=('debug', 'release', 'Debug', 'Release')))
 vars.Add(EnumVariable('BD', 'Have bundled daemon built-in for C++ test samples', 'on', allowed_values=('on', 'off')))
 vars.Add(EnumVariable('DOCS', '''Output doc type. Setting the doc type to "dev" will produce HTML 
@@ -161,7 +161,10 @@ env.Append(BUILDERS = {'Status' : statusBuilder})
 
 # Read OS and CPU specific SConscript file
 Export('env')
-env.SConscript('conf/${OS_CONF}/${CPU}/SConscript')
+if env['OS'] == 'darwin' and (env['CPU'] == 'armv7' or env['CPU'] == 'armv7s'):
+    env.SConscript('conf/${OS_CONF}/arm/SConscript')
+else:
+    env.SConscript('conf/${OS_CONF}/${CPU}/SConscript')
 
 # Whitespace policy
 if env['WS'] != 'off' and not env.GetOption('clean'):

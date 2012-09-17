@@ -19,6 +19,12 @@ import os
 # Import common linux setttings
 env.SConscript(['../SConscript'])
 
+s = os.environ.get('CONFIGURATION')
+s = s.lower()
+env['OBJDIR'] = 'build/${OS}/${CPU}/' + s + '/obj'
+env['DISTDIR'] = '#build/${OS}/${CPU}/' + s + '/dist'
+env['TESTDIR'] = '#build/${OS}/${CPU}/' + s + '/test'
+
 vars = Variables()
 vars.Add(PathVariable('SDKROOT', ' Base directory of Mac/iOS SDK for target', os.environ.get('SDKROOT')))
 vars.Add(PathVariable('SYSTEM_DEVELOPER_DIR', ' Base directory for developer tools', os.environ.get('SYSTEM_DEVELOPER_DIR')))
