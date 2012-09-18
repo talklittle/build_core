@@ -161,10 +161,7 @@ env.Append(BUILDERS = {'Status' : statusBuilder})
 
 # Read OS and CPU specific SConscript file
 Export('env')
-if env['OS'] == 'darwin' and (env['CPU'] == 'armv7' or env['CPU'] == 'armv7s'):
-    env.SConscript('conf/${OS_CONF}/arm/SConscript')
-else:
-    env.SConscript('conf/${OS_CONF}/${CPU}/SConscript')
+env.SConscript('conf/${OS_CONF}/${CPU}/SConscript')
 
 # Whitespace policy
 if env['WS'] != 'off' and not env.GetOption('clean'):
