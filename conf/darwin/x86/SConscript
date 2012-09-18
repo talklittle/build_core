@@ -63,7 +63,7 @@ env.Append(CFLAGS=[
 env.Append(CXXFLAGS=[
             '-fno-rtti',
             '-fno-exceptions',
-            '-Wc++0x-extensions'])
+            '-Wc++11-extensions'])
 
 ccld = ['-arch', 'i686', '-arch', 'x86_64', '-mmacosx-version-min=10.5.4']
 
