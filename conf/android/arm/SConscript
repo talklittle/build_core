@@ -150,14 +150,20 @@ else:
     env['CXX'] = '$ANDROID_TOOLS/arm-eabi-g++'
     env['LINK'] = '$ANDROID_TOOLS/arm-eabi-gcc'
 
-#env['ANDROID_TARGET'] = 'generic'
+# Normalize NDK platform support (only certain ANDROID_API_LEVELs are directly supported)
+if int(env['ANDROID_API_LEVEL']) >= 14:
+   ndkApiLevel = '14';
+elif int(env['ANDROID_API_LEVEL']) >= 9:
+   ndkApiLevel = '9';
+else:
+   ndkApiLevel = '8';
 
 # Android include paths
 if (env.subst('$ANDROID_NDK_VERSION') == '5' or 
     env.subst('$ANDROID_NDK_VERSION') == '6' or
     env.subst('$ANDROID_NDK_VERSION') == '7' or
     env.subst('$ANDROID_NDK_VERSION') == '8'):
-   env.Append(CPPPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/include',
+   env.Append(CPPPATH=['$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/include',
                        #Using GNU STL.
                        '$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/include',
                        '$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/include/backward',
@@ -165,7 +171,7 @@ if (env.subst('$ANDROID_NDK_VERSION') == '5' or
                        '$ANDROID_SRC/external/bluetooth/bluez/include',
                        '$ANDROID_SRC/external/openssl/include'])
 elif (env.subst('$ANDROID_NDK_VERSION') == '8b'):
-   env.Append(CPPPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/include',
+   env.Append(CPPPATH=['$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/include',
                        #Using GNU STL.
                        '$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/4.6/include',
                        '$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/4.6/include/backward',
@@ -173,7 +179,7 @@ elif (env.subst('$ANDROID_NDK_VERSION') == '8b'):
                        '$ANDROID_SRC/external/bluetooth/bluez/include',
                        '$ANDROID_SRC/external/openssl/include'])
 else:
-    env.Append(CPPPATH=['$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/include',
+    env.Append(CPPPATH=['$ANDROID_NDK/build/platforms/android-' + ndkApiLevel + '/arch-arm/usr/include',
                         '$ANDROID_SRC/external/bluetooth/bluez/include',
                         '$ANDROID_SRC/external/openssl/include'])
 
@@ -183,25 +189,25 @@ if (env.subst('$ANDROID_NDK_VERSION') == '5' or
    #append the location of the libstdc++ library
    env.Append(LIBPATH=['$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/libs/armeabi'])
    
-   env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+   env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib'])
    #append the location of the gcc library
    env.Append(LIBPATH=['$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$PREBUILT_HOST_OS/lib/gcc/arm-linux-androideabi/4.4.3/'])
 elif (env.subst('$ANDROID_NDK_VERSION') == '7' or 
       env.subst('$ANDROID_NDK_VERSION') == '8'):
-   env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+   env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib'])
    #append the location of the gnustl_static library
    env.Append(LIBPATH=['$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/libs/armeabi'])
    #append the location of the gcc library
    env.Append(LIBPATH=['$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$PREBUILT_HOST_OS/lib/gcc/arm-linux-androideabi/4.4.3/'])
 elif (env.subst('$ANDROID_NDK_VERSION') == '8b'):
-   env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+   env.Append(LIBPATH=['$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib'])
    #append the location of the gnustl_static library
    env.Append(LIBPATH=['$ANDROID_NDK/sources/cxx-stl/gnu-libstdc++/4.6/libs/armeabi'])
    #append the location of the gcc library
    env.Append(LIBPATH=['$ANDROID_NDK/toolchains/arm-linux-androideabi-4.6/prebuilt/$PREBUILT_HOST_OS/lib/gcc/arm-linux-androideabi/4.6.x-google/'])
 
 else:
-    env.Append(LIBPATH=['$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+    env.Append(LIBPATH=['$ANDROID_NDK/build/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib'])
     #append the location of the gcc library
     env.Append(LIBPATH=['$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/'])
     
@@ -214,11 +220,11 @@ if ndkVersion >= 5:
    env.Append(CXXFLAGS=['-Wno-deprecated'])
    env.Append(LINKFLAGS=['-Wl,--gc-sections',
                          '-Wl,-z,nocopyreloc',
-                         '--sysroot=$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm',
+                         '--sysroot=$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm',
                          '-Wl,--no-undefined',
                          '-Wl,-z,noexecstack',
                          '-Wl,--warn-once',
-                         '-Wl,-rpath-link=$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib'])
+                         '-Wl,-rpath-link=$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib'])
 
    # SCons default SHLINKFLAGS is '$LINKFLAGS -shared'.  Since we don't
    # want to pull in $LINKFLAGS, reset it here instead of Append().
@@ -230,14 +236,14 @@ if ndkVersion >= 5:
    
    env['SHLINKFLAGS'] = ' '.join(['-Wl,-soname,${TARGET.file} '
                                   '-shared',
-                                  '--sysroot=$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm',
-                                  '$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/libc.so',
-                                  '$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/libstdc++.so',
-                                  '$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/libm.so',
+                                  '--sysroot=$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm',
+                                  '$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib/libc.so',
+                                  '$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib/libstdc++.so',
+                                  '$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib/libm.so',
                                   '-Wl,--fix-cortex-a8',
                                   '-Wl,--no-undefined',
                                   '-Wl,-z,noexecstack',
-                                  '-Wl,-rpath-link=$ANDROID_NDK/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
+                                  '-Wl,-rpath-link=$ANDROID_NDK/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib',
                                   stripomatic])
 else:
     env.Append(LINKFLAGS=['-nostdlib',
@@ -247,13 +253,13 @@ else:
                           '-Wl,-dynamic-linker,/system/bin/linker',
                           '-Wl,--gc-sections',
                           '-Wl,-z,nocopyreloc',
-                          '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
-                          '$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/crtbegin_dynamic.o'])
+                          '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib',
+                          '$ANDROID_NDK/build/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib/crtbegin_dynamic.o'])
 
     # Android linking requires a postfix set of objects
     env.Append(LINKCOM=' $LINKFLAGS_POST')
     env.Append(LINKFLAGS_POST=[#'$ANDROID_NDK/build/prebuilt/$PREBUILT_HOST_OS/arm-eabi-4.4.0/lib/gcc/arm-eabi/4.4.0/libgcc.a',
-                               '$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib/crtend_android.o'])
+                               '$ANDROID_NDK/build/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib/crtend_android.o'])
 
     # SCons default SHLINKFLAGS is '$LINKFLAGS -shared'.  Since we don't
     # want to pull in $LINKFLAGS, reset it here instead of Append().
@@ -271,7 +277,7 @@ else:
                                    '-Wl,--fix-cortex-a8',
                                    '-Wl,--no-undefined',
                                    '-Wl,-z,noexecstack',
-                                   '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-$ANDROID_API_LEVEL/arch-arm/usr/lib',
+                                   '-Wl,-rpath-link=$ANDROID_NDK/build/platforms/android-' + ndkApiLevel + '/arch-arm/usr/lib',
                                    stripomatic])
 
 # Debug/Release variants
