@@ -216,7 +216,7 @@ env.Append(LIBPATH=['$ANDROID_SRC/out/target/product/$ANDROID_TARGET/system/lib'
 
 
 # Add Android SDK lib to CLASSPATH
-if '' != env['ANDROID_SDK']:
+if '' != env.subst('$ANDROID_SDK'):
    env.AppendENVPath("JAVACLASSPATH", [env.subst('$ANDROID_SDK/platforms/android-$ANDROID_API_LEVEL/android.jar')])
    env['JAVACLASSPATH'] = env['ENV']['JAVACLASSPATH']
 
