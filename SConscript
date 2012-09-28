@@ -107,6 +107,10 @@ if env['VARIANT'] == 'release':
 
 env.Append(CPPDEFINES = ['QCC_OS_GROUP_%s' % env['OS_GROUP'].upper()])
 
+# Set JAVACLASSPATH to contents of CLASSPATH env variable
+env.AppendENVPath("JAVACLASSPATH", os.environ.get('CLASSPATH'))
+env['JAVACLASSPATH'] = env['ENV']['JAVACLASSPATH']
+
 # Setup additional builders
 if os.path.exists('tools/scons/doxygen.py'):
     env.Tool('doxygen', toolpath=['tools/scons'])
