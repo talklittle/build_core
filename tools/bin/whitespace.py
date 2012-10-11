@@ -19,7 +19,7 @@ import sys, os, fnmatch, re, filecmp, difflib, textwrap
 from subprocess import Popen, STDOUT, PIPE
 
 def main(argv=None):
-    dir_ignore = ["stlport", "build", ".git", ".repo"]
+    dir_ignore = ["stlport", "build", ".git", ".repo", "alljoyn_objc", "win8_apps",]
     file_ignore_patterns = ['\.#.*', 'alljoyn_java\.h', 'Status\.h', 'Status_CPP0x\.h', 'Internal\.h']
     file_patterns = ['*.c', '*.h', '*.cpp', '*.cc']
     valid_commands = ["check", "detail", "fix", "off"]
